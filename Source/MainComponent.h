@@ -11,6 +11,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "DJAudioPlayer.h"
 #include "DeckGUI.h"
+#include "Header.h"
 
 
 //==============================================================================
@@ -39,7 +40,9 @@ private:
     // Your private member variables go here...
      
     AudioFormatManager formatManager;
-    AudioThumbnailCache thumbCache{100}; 
+    AudioThumbnailCache thumbCache{100};
+
+    Header header;
 
     DJAudioPlayer player1{formatManager};
     DeckGUI deckGUI1{&player1, formatManager, thumbCache}; 

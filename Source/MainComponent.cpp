@@ -26,7 +26,9 @@ MainComponent::MainComponent()
     {
         // Specify the number of input and output channels that we want to open
         setAudioChannels (0, 2);
-    }  
+    }
+
+    addAndMakeVisible(header);
 
     addAndMakeVisible(deckGUI1); 
     addAndMakeVisible(deckGUI2);  
@@ -80,8 +82,11 @@ void MainComponent::paint (Graphics& g)
 
 void MainComponent::resized()
 {
-    deckGUI1.setBounds(0, 0, getWidth()/2, getHeight());
-    deckGUI2.setBounds(getWidth()/2, 0, getWidth()/2, getHeight());
+    const int headerHeight = getHeight()/10;
+
+    header.setBounds(0, 0, getWidth(), headerHeight);
+    deckGUI1.setBounds(0, headerHeight, getWidth()/2, getHeight()- headerHeight);
+    deckGUI2.setBounds(getWidth()/2, headerHeight, getWidth()/2, getHeight()- headerHeight);
 
 }
 

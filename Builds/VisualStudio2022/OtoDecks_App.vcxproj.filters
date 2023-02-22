@@ -619,6 +619,9 @@
     <ClCompile Include="..\..\Source\WaveformDisplay.cpp">
       <Filter>OtoDecks\Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Header.cpp">
+      <Filter>OtoDecks\Source</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\DeckGUI.cpp">
       <Filter>OtoDecks\Source</Filter>
     </ClCompile>
@@ -3117,6 +3120,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\Header.h">
+      <Filter>OtoDecks\Source</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\WaveformDisplay.h">
       <Filter>OtoDecks\Source</Filter>
     </ClInclude>
