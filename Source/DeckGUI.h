@@ -43,22 +43,32 @@ public:
 
     void timerCallback() override; 
 
+    void loadTrackToDeck();
+
 private:
 
-    TextButton playButton{"PLAY"};
-    TextButton stopButton{"STOP"};
-    TextButton loadButton{"LOAD"};
-  
+    // Player buttons
+    DrawableButton playButton{"PLAY", DrawableButton::ButtonStyle::ImageOnButtonBackground };
+    DrawableButton pauseButton{ "PAUSE", DrawableButton::ButtonStyle::ImageOnButtonBackground };
+    DrawableButton stopButton{"STOP", DrawableButton::ButtonStyle::ImageOnButtonBackground };
+    DrawableButton loopButton{ "LOOP", DrawableButton::ButtonStyle::ImageOnButtonBackground };
+    DrawableButton forwardButton{ "FORWARD", DrawableButton::ButtonStyle::ImageOnButtonBackground };
+    DrawableButton backwardButton{ "BACKWARD",DrawableButton::ButtonStyle::ImageOnButtonBackground };
+    TextButton loadButton{ "LOAD" };
+    
+
+    String trackTitle;
+
     Slider volSlider; 
     Slider speedSlider;
     Slider posSlider;
 
     FileChooser fChooser{"Select a file..."};
 
-
     WaveformDisplay waveformDisplay;
 
-    DJAudioPlayer* player; 
+    DJAudioPlayer* player;
+
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DeckGUI)
 };

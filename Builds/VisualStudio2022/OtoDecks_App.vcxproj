@@ -141,6 +141,7 @@
     <Lib/>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\AlbumCover.cpp"/>
     <ClCompile Include="..\..\Source\WaveformDisplay.cpp"/>
     <ClCompile Include="..\..\Source\Header.cpp"/>
     <ClCompile Include="..\..\Source\DeckGUI.cpp"/>
@@ -2451,6 +2452,7 @@
     <ClCompile Include="..\..\..\..\JUCE\modules\juce_opengl\juce_opengl.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\JuceLibraryCode\BinaryData.cpp"/>
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_audio_basics.cpp"/>
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_audio_devices.cpp"/>
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_audio_formats.cpp"/>
@@ -2473,6 +2475,7 @@
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_opengl.cpp"/>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\AlbumCover.h"/>
     <ClInclude Include="..\..\Source\Header.h"/>
     <ClInclude Include="..\..\Source\WaveformDisplay.h"/>
     <ClInclude Include="..\..\Source\DeckGUI.h"/>
@@ -3448,9 +3451,16 @@
     <ClInclude Include="..\..\..\..\JUCE\modules\juce_opengl\utils\juce_OpenGLAppComponent.h"/>
     <ClInclude Include="..\..\..\..\JUCE\modules\juce_opengl\juce_opengl.h"/>
     <ClInclude Include="..\..\JuceLibraryCode\AppConfig.h"/>
+    <ClInclude Include="..\..\JuceLibraryCode\BinaryData.h"/>
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h"/>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\Assets\backward_solid.svg"/>
+    <None Include="..\..\Assets\forward_solid.svg"/>
+    <None Include="..\..\Assets\pause_solid.svg"/>
+    <None Include="..\..\Assets\play_solid.svg"/>
+    <None Include="..\..\Assets\repeat_solid.svg"/>
+    <None Include="..\..\Assets\stop_solid.svg"/>
     <None Include="..\..\..\..\JUCE\modules\juce_audio_devices\native\oboe\CMakeLists.txt"/>
     <None Include="..\..\..\..\JUCE\modules\juce_audio_devices\native\oboe\README.md"/>
     <None Include="..\..\..\..\JUCE\modules\juce_audio_formats\codecs\flac\Flac Licence.txt"/>

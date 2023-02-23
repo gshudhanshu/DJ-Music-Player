@@ -2,6 +2,9 @@
 
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="OtoDecks\Assets">
+      <UniqueIdentifier>{58E9A624-5DA4-28D4-A676-4EFA68A0107E}</UniqueIdentifier>
+    </Filter>
     <Filter Include="OtoDecks\Source">
       <UniqueIdentifier>{35A3AE94-1AB3-89C0-566C-A97F5D4E91F7}</UniqueIdentifier>
     </Filter>
@@ -616,6 +619,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\AlbumCover.cpp">
+      <Filter>OtoDecks\Source</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\WaveformDisplay.cpp">
       <Filter>OtoDecks\Source</Filter>
     </ClCompile>
@@ -3070,6 +3076,9 @@
     <ClCompile Include="..\..\..\..\JUCE\modules\juce_opengl\juce_opengl.mm">
       <Filter>JUCE Modules\juce_opengl</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\JuceLibraryCode\BinaryData.cpp">
+      <Filter>JUCE Library Code</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_audio_basics.cpp">
       <Filter>JUCE Library Code</Filter>
     </ClCompile>
@@ -3120,6 +3129,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\AlbumCover.h">
+      <Filter>OtoDecks\Source</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\Header.h">
       <Filter>OtoDecks\Source</Filter>
     </ClInclude>
@@ -6045,11 +6057,32 @@
     <ClInclude Include="..\..\JuceLibraryCode\AppConfig.h">
       <Filter>JUCE Library Code</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\JuceLibraryCode\BinaryData.h">
+      <Filter>JUCE Library Code</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h">
       <Filter>JUCE Library Code</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\Assets\backward_solid.svg">
+      <Filter>OtoDecks\Assets</Filter>
+    </None>
+    <None Include="..\..\Assets\forward_solid.svg">
+      <Filter>OtoDecks\Assets</Filter>
+    </None>
+    <None Include="..\..\Assets\pause_solid.svg">
+      <Filter>OtoDecks\Assets</Filter>
+    </None>
+    <None Include="..\..\Assets\play_solid.svg">
+      <Filter>OtoDecks\Assets</Filter>
+    </None>
+    <None Include="..\..\Assets\repeat_solid.svg">
+      <Filter>OtoDecks\Assets</Filter>
+    </None>
+    <None Include="..\..\Assets\stop_solid.svg">
+      <Filter>OtoDecks\Assets</Filter>
+    </None>
     <None Include="..\..\..\..\JUCE\modules\juce_audio_devices\native\oboe\CMakeLists.txt">
       <Filter>JUCE Modules\juce_audio_devices\native\oboe</Filter>
     </None>
