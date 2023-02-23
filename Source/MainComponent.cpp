@@ -84,9 +84,23 @@ void MainComponent::resized()
 {
     const int headerHeight = getHeight()/10;
 
-    header.setBounds(0, 0, getWidth(), headerHeight);
-    deckGUI1.setBounds(0, headerHeight, getWidth()/2, getHeight()- headerHeight);
-    deckGUI2.setBounds(getWidth()/2, headerHeight, getWidth()/2, getHeight()- headerHeight);
+    juce::FlexBox fb;
+    fb.flexDirection = juce::FlexBox::Direction::column;
+    fb.items.add(juce::FlexItem(header).withFlex(1));
+
+    juce::FlexBox decks;
+    decks.flexDirection = juce::FlexBox::Direction::row;
+
+    decks.items.add(juce::FlexItem(deckGUI1).withFlex(1));
+    decks.items.add(juce::FlexItem(deckGUI2).withFlex(1));
+
+    fb.items.add(juce::FlexItem(decks).withFlex(4));
+    fb.items.add(juce::FlexItem(playlistComponent).withFlex(4));
+
+    fb.performLayout(getLocalBounds().toFloat());
+    // header.setBounds(0, 0, getWidth(), headerHeight);
+    // deckGUI1.setBounds(0, headerHeight, getWidth()/2, getHeight()- headerHeight);
+    // deckGUI2.setBounds(getWidth()/2, headerHeight, getWidth()/2, getHeight()- headerHeight);
 
 }
 
