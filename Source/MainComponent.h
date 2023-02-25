@@ -44,7 +44,6 @@ private:
     AudioThumbnailCache thumbCache{100};
 
     Header header;
-    PlaylistComponent playlistComponent;
 
     DJAudioPlayer player1{formatManager};
     DeckGUI deckGUI1{&player1, formatManager, thumbCache}; 
@@ -52,6 +51,7 @@ private:
     DJAudioPlayer player2{formatManager};
     DeckGUI deckGUI2{&player2, formatManager, thumbCache};
 
+    PlaylistComponent playlistComponent{ &deckGUI1, &deckGUI1 };
 
     MixerAudioSource mixerSource; 
     
