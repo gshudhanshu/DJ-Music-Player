@@ -14,7 +14,7 @@
 //==============================================================================
 PlaylistComponent::PlaylistComponent(
 	DeckGUI* _deckGUI1,
-	DeckGUI* _deckGUI2): deckGUI1(_deckGUI1), deckGUI2(_deckGUI2)
+	DeckGUI* _deckGUI2) : deckGUI1(_deckGUI1), deckGUI2(_deckGUI2)
 {
 	// In your constructor, you should add any child components, and
 	// initialise any special settings that your component needs.
@@ -49,7 +49,7 @@ PlaylistComponent::PlaylistComponent(
 	importPlaylistBtn.addListener(this);
 	exportPlaylistBtn.addListener(this);
 	clearPlaylistBtn.addListener(this);
-
+	searchInput.onTextChange = [this] { searchTrackInPlaylist(searchInput.getText()); };
 }
 
 PlaylistComponent::~PlaylistComponent()
@@ -101,6 +101,9 @@ void PlaylistComponent::resized()
 
 int PlaylistComponent::getNumRows()
 {
+	if (!searchInput.isEmpty()) {
+		return filteredPlaylistArr.size();
+	}
 	return playlistArr.size();
 }
 void PlaylistComponent::paintRowBackground(Graphics& g, int rowNumber, int width, int height, bool rowIsSelected)
@@ -116,15 +119,25 @@ void PlaylistComponent::paintRowBackground(Graphics& g, int rowNumber, int width
 }
 void PlaylistComponent::paintCell(Graphics& g, int rowNumber, int columnId, int width, int height, bool rowIsSelected)
 {
+	Array <juce::File> tracksArr;
+	if (!searchInput.isEmpty())
+	{
+		tracksArr = filteredPlaylistArr;
+	}
+	else
+	{
+		tracksArr = playlistArr;
+	}
+
 	if (columnId == 3)
 	{
-		g.drawText(playlistArr[rowNumber].getFileName(), 0, 0, width, height, Justification::centredLeft);
+		g.drawText(tracksArr[rowNumber].getFileName(), 0, 0, width, height, Justification::centredLeft);
 	}
 	if (columnId == 4 || columnId == 5)
 	{
 		AudioFormatManager formatManager;
 		formatManager.registerBasicFormats();
-		ScopedPointer<AudioFormatReader> reader = formatManager.createReaderFor(playlistArr[rowNumber]);
+		ScopedPointer<AudioFormatReader> reader = formatManager.createReaderFor(tracksArr[rowNumber]);
 
 		// if (reader) {
 		//        for (String key : reader->metadataValues.getAllKeys()) {
@@ -145,14 +158,7 @@ void PlaylistComponent::paintCell(Graphics& g, int rowNumber, int columnId, int 
 			String time = convertSecTohhmmssFormat(seconds);
 			g.drawText(time, 0, 0, width, height, Justification::centredLeft);
 		}
-
-		// g.drawText(reader->metadataValues.getValue("artist", ""), 0, 0, width, height, Justification::centredLeft);
 	}
-	// else if(columnId == 5)
-	// {
-	//     g.drawText(reader->metadataValues.getValue("duration", ""), 0, 0, width, height, Justification::centredLeft);
-	// }
-	//
 }
 
 Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnId, bool isRowSelected, Component* existingComponentToUpdate)
@@ -203,8 +209,26 @@ void PlaylistComponent::deleteTrackFromPlaylist(int id)
 		}// result == 0 means you click Cancel
 	if (result == 1)
 	{
-		playlistArr.remove(id);
+		if (searchInput.isEmpty())
+		{
+			playlistArr.remove(id);
+		}
+		else
+		{
+			String filename = filteredPlaylistArr[id].getFileName();
+			for (int i = 0; i < playlistArr.size(); i++)
+			{
+				if (playlistArr[i].getFileName() == filename)
+				{
+					playlistArr.remove(i);
+					break;
+				}
+			}
+		}
+
 		tableComponent.updateContent();
+		//Update filtered array
+		searchTrackInPlaylist(searchInput.getText());
 	}// result == 1 means you click OK
 		});
 
@@ -296,7 +320,7 @@ void PlaylistComponent::clearPlaylist()
 	if (result == 1)
 	{
 		playlistArr.clear();
-			tableComponent.updateContent();
+		tableComponent.updateContent();
 	}// result == 1 means you click OK
 		});
 
@@ -312,22 +336,20 @@ void PlaylistComponent::buttonClicked(Button* button)
 		id = std::stoi(button->getComponentID().toStdString());
 	}
 
-
 	// Delete track from playlist
 	if (button->getButtonText() == "DELETE_TRACK")
 	{
+		DBG(id);
 		deleteTrackFromPlaylist(id);
 	}
 
-	else if(button->getButtonText() == "LOAD_DECK_1")
+	else if (button->getButtonText() == "LOAD_DECK_1")
 	{
-		DBG("LOAD_DECK_1");
 		deckGUI1->loadTrackToDeck(playlistArr[id]);
 	}
 
 	else if (button->getButtonText() == "LOAD_DECK_2")
 	{
-		DBG("LOAD_DECK_2");
 		deckGUI2->loadTrackToDeck(playlistArr[id]);
 	}
 
@@ -350,8 +372,22 @@ void PlaylistComponent::buttonClicked(Button* button)
 	{
 		clearPlaylist();
 	}
+}
 
-
+void PlaylistComponent::searchTrackInPlaylist(String textString)
+{
+	if (textString.isNotEmpty())
+	{
+		filteredPlaylistArr.clear();
+		for (auto file : playlistArr)
+		{
+			if (file.getFileName().containsIgnoreCase(textString))
+			{
+				filteredPlaylistArr.add(file);
+			}
+		}
+	}
+	tableComponent.updateContent();
 }
 
 String PlaylistComponent::convertSecTohhmmssFormat(int seconds)
