@@ -196,13 +196,12 @@ void PlaylistComponent::deleteTrackFromPlaylist(int id)
 		if (result == 1)
 		{
 			playlistArr.remove(id);
+			tableComponent.updateContent();
 		}// result == 1 means you click OK
 		});
-
+	
 	AlertWindow::showOkCancelBox(MessageBoxIconType::QuestionIcon, "Delete Track", "Are you sure you want to delete this track?", "Yes", "No", {},
 		callback);
-
-	tableComponent.updateContent();
 }
 
 void PlaylistComponent::buttonClicked(Button* button)
