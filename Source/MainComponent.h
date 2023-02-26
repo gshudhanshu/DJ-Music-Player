@@ -52,7 +52,7 @@ private:
     DJAudioPlayer player2{formatManager};
     DeckGUI deckGUI2{&player2, formatManager, thumbCache};
 
-    PlaylistComponent playlistComponent{ &deckGUI1, &deckGUI1 };
+    PlaylistComponent playlistComponent{ &deckGUI1, &deckGUI2 };
 
     MixerAudioSource mixerSource; 
     

@@ -9,11 +9,9 @@
 */
 
 #pragma once
-#include <fstream>
-
 #include <JuceHeader.h>
-
 #include "DeckGUI.h"
+
 
 //==============================================================================
 /*
@@ -23,7 +21,9 @@ class PlaylistComponent : public juce::Component,
 	public Button::Listener
 {
 public:
-	PlaylistComponent(DeckGUI* deckGUI1, DeckGUI* deckGUI2);
+	PlaylistComponent(
+		DeckGUI* _deckGUI1,
+		DeckGUI* _deckGUI2);
 
 	~PlaylistComponent() override;
 
@@ -39,6 +39,7 @@ public:
 
 	String convertSecTohhmmssFormat(int seconds);
 
+
 private:
 
 	AudioFormatManager formatManager;
@@ -47,7 +48,6 @@ private:
 	TableListBox tableComponent;
 	Array <juce::File> playlistArr;
 	Array<juce::File> filteredPlaylistArr;
-
 
 	// Actions buttons
 	TextButton importTracksBtn{ "Import Tracks" };
@@ -59,7 +59,7 @@ private:
 
 	// File Choosers/Exporters
 	FileChooser musicTracksChooser{ "Select music tracks"};
-	FileChooser exportPlaylist{ "Export Playlist", File("export_playlist"), "*.txt"};
+	FileChooser exportPlaylist{ "Export Playlist", File(), "*.txt"};
 	FileChooser importPlaylist{ "Import Playlist", File(), "*.txt" };
 
 
@@ -71,7 +71,6 @@ private:
 	void deleteTrackFromPlaylist(int id);
 	void clearPlaylist();
 	void searchTrackInPlaylist(String textString);
-
 
 	DeckGUI* deckGUI1;
 	DeckGUI* deckGUI2;

@@ -12,7 +12,9 @@
 #include "PlaylistComponent.h"
 
 //==============================================================================
-PlaylistComponent::PlaylistComponent(DeckGUI* deckGUI1, DeckGUI* deckGUI2)
+PlaylistComponent::PlaylistComponent(
+	DeckGUI* _deckGUI1,
+	DeckGUI* _deckGUI2): deckGUI1(_deckGUI1), deckGUI2(_deckGUI2)
 {
 	// In your constructor, you should add any child components, and
 	// initialise any special settings that your component needs.
@@ -310,10 +312,23 @@ void PlaylistComponent::buttonClicked(Button* button)
 		id = std::stoi(button->getComponentID().toStdString());
 	}
 
+
 	// Delete track from playlist
 	if (button->getButtonText() == "DELETE_TRACK")
 	{
 		deleteTrackFromPlaylist(id);
+	}
+
+	else if(button->getButtonText() == "LOAD_DECK_1")
+	{
+		DBG("LOAD_DECK_1");
+		deckGUI1->loadTrackToDeck(playlistArr[id]);
+	}
+
+	else if (button->getButtonText() == "LOAD_DECK_2")
+	{
+		DBG("LOAD_DECK_2");
+		deckGUI2->loadTrackToDeck(playlistArr[id]);
 	}
 
 	else if (button == &importTracksBtn)
@@ -335,6 +350,8 @@ void PlaylistComponent::buttonClicked(Button* button)
 	{
 		clearPlaylist();
 	}
+
+
 }
 
 String PlaylistComponent::convertSecTohhmmssFormat(int seconds)

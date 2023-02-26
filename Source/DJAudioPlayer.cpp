@@ -17,7 +17,7 @@ DJAudioPlayer::DJAudioPlayer(AudioFormatManager& _formatManager)
 }
 DJAudioPlayer::~DJAudioPlayer()
 {
-
+    transportSource.setSource(nullptr);
 }
 
 void DJAudioPlayer::prepareToPlay (int samplesPerBlockExpected, double sampleRate) 

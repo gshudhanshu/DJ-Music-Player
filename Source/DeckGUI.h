@@ -24,9 +24,9 @@ class DeckGUI    : public Component,
                    public Timer
 {
 public:
-    DeckGUI(DJAudioPlayer* player, 
-           AudioFormatManager & 	formatManagerToUse,
-           AudioThumbnailCache & 	cacheToUse );
+    DeckGUI(DJAudioPlayer* player,
+            juce::AudioFormatManager & formatManagerToUse,
+            juce::AudioThumbnailCache & cacheToUse);
     ~DeckGUI();
 
     void paint (Graphics&) override;
@@ -42,8 +42,7 @@ public:
     void filesDropped (const StringArray &files, int x, int y) override; 
 
     void timerCallback() override; 
-
-    void loadTrackToDeck();
+    void loadTrackToDeck(File file);
 
 private:
 
@@ -65,10 +64,8 @@ private:
 
     FileChooser fChooser{"Select a file..."};
 
-    WaveformDisplay waveformDisplay;
-
     DJAudioPlayer* player;
-
+    WaveformDisplay waveformDisplay;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DeckGUI)
 };

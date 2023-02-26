@@ -12,11 +12,12 @@
 #include "DeckGUI.h"
 
 //==============================================================================
-DeckGUI::DeckGUI(DJAudioPlayer* _player, 
-                AudioFormatManager & 	formatManagerToUse,
-                AudioThumbnailCache & 	cacheToUse
-           ) : player(_player), 
-               waveformDisplay(formatManagerToUse, cacheToUse)
+DeckGUI::DeckGUI(DJAudioPlayer* _player,
+    juce::AudioFormatManager& formatManagerToUse,
+    juce::AudioThumbnailCache& cacheToUse)
+    : player(_player), waveformDisplay(formatManagerToUse, cacheToUse)
+
+
 {
     // Import svg button SVGs
     auto playSvg = Drawable::createFromImageData(BinaryData::play_solid_svg, BinaryData::play_solid_svgSize);
@@ -187,13 +188,19 @@ void DeckGUI::filesDropped (const StringArray &files, int x, int y)
   }
 }
 
+void DeckGUI::loadTrackToDeck(File file)
+{
+    player->loadURL(URL{ file });
+    waveformDisplay.loadURL(URL{ file });
+}
+
+
 void DeckGUI::timerCallback()
 {
     //std::cout << "DeckGUI::timerCallback" << std::endl;
     waveformDisplay.setPositionRelative(
-            player->getPositionRelative());
+    player->getPositionRelative());
 }
-
 
     
 
