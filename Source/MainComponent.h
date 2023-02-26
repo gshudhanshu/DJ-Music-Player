@@ -39,8 +39,9 @@ public:
 private:
     //==============================================================================
     // Your private member variables go here...
-     
+
     AudioFormatManager formatManager;
+
     AudioThumbnailCache thumbCache{100};
 
     Header header;

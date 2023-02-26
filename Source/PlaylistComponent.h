@@ -36,7 +36,11 @@ public:
 
 	void buttonClicked(Button* button) override;
 
+	String convertSecTohhmmssFormat(int seconds);
+
 private:
+
+	AudioFormatManager formatManager;
 
 	// Playlist table
 	TableListBox tableComponent;
@@ -44,17 +48,18 @@ private:
 	Array<juce::File> filteredPlaylistArr;
 
 	// Actions table
-	TableListBox actions;
+	// TableListBox actions;
 	// Actions buttons
 	TextButton importTracks{ "Import Tracks" };
-	TextButton exportTracks{ "Import Tracks" };
-	TextButton deleteTrack{ "Import Tracks" };
-	TextButton clearPlaylist{ "Import Tracks" };
+	TextButton importPlaylist{ "Import Playlist" };
+	TextButton exportPlaylist{ "Export Playlist" };
+	TextButton clearPlaylist{ "Clear Playlist" };
 	// Actions search bar
-	TextEditor searchInput{ "Search..." };
+	TextEditor searchInput{ "Search" };
 
 	// Playlist functions
 	void importTracksToPlaylist();
+	void importExportedPlaylist();
 	void exportTracksFromPlaylist();
 	void deleteTrackFromPlaylist(int id);
 	void clearPlaylistFromTracks();

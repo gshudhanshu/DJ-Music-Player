@@ -26,8 +26,11 @@ namespace BinaryData
     extern const char*   stop_solid_svg;
     const int            stop_solid_svgSize = 355;
 
+    extern const char*   trash_solid_svg;
+    const int            trash_solid_svgSize = 502;
+
     // Number of elements in the namedResourceList and originalFileNames arrays.
-    const int namedResourceListSize = 6;
+    const int namedResourceListSize = 7;
 
     // Points to the start of a list of resource names.
     extern const char* namedResourceList[];

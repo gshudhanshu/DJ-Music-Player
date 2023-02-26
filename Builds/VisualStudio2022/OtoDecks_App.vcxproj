@@ -3463,6 +3463,7 @@
     <None Include="..\..\Assets\play_solid.svg"/>
     <None Include="..\..\Assets\repeat_solid.svg"/>
     <None Include="..\..\Assets\stop_solid.svg"/>
+    <None Include="..\..\Assets\trash_solid.svg"/>
     <None Include="..\..\..\..\JUCE\modules\juce_audio_devices\native\oboe\CMakeLists.txt"/>
     <None Include="..\..\..\..\JUCE\modules\juce_audio_devices\native\oboe\README.md"/>
     <None Include="..\..\..\..\JUCE\modules\juce_audio_formats\codecs\flac\Flac Licence.txt"/>
