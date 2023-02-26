@@ -38,10 +38,16 @@ PlaylistComponent::PlaylistComponent(DeckGUI* deckGUI1, DeckGUI* deckGUI2)
 
 	searchInput.setTextToShowWhenEmpty("Search...", juce::Colours::grey);
 	addAndMakeVisible(searchInput);
-	addAndMakeVisible(importTracks);
-	addAndMakeVisible(importPlaylist);
-	addAndMakeVisible(exportPlaylist);
-	addAndMakeVisible(clearPlaylist);
+	addAndMakeVisible(importTracksBtn);
+	addAndMakeVisible(importPlaylistBtn);
+	addAndMakeVisible(exportPlaylistBtn);
+	addAndMakeVisible(clearPlaylistBtn);
+
+	importTracksBtn.addListener(this);
+	importPlaylistBtn.addListener(this);
+	exportPlaylistBtn.addListener(this);
+	clearPlaylistBtn.addListener(this);
+
 }
 
 PlaylistComponent::~PlaylistComponent()
@@ -75,10 +81,10 @@ void PlaylistComponent::resized()
 
 	actions.flexDirection = juce::FlexBox::Direction::column;
 	actions.items.add(juce::FlexItem(searchInput).withFlex(1).withMaxHeight(30));
-	actions.items.add(juce::FlexItem(importTracks).withFlex(1).withMaxHeight(30));
-	actions.items.add(juce::FlexItem(importPlaylist).withFlex(1).withMaxHeight(30));
-	actions.items.add(juce::FlexItem(exportPlaylist).withFlex(1).withMaxHeight(30));
-	actions.items.add(juce::FlexItem(clearPlaylist).withFlex(1).withMaxHeight(30));
+	actions.items.add(juce::FlexItem(importTracksBtn).withFlex(1).withMaxHeight(30));
+	actions.items.add(juce::FlexItem(importPlaylistBtn).withFlex(1).withMaxHeight(30));
+	actions.items.add(juce::FlexItem(exportPlaylistBtn).withFlex(1).withMaxHeight(30));
+	actions.items.add(juce::FlexItem(clearPlaylistBtn).withFlex(1).withMaxHeight(30));
 
 	playlistFlex.items.add(juce::FlexItem(actions).withFlex(1));
 	playlistFlex.items.add(juce::FlexItem(tableComponent).withFlex(4));
@@ -193,23 +199,141 @@ void PlaylistComponent::deleteTrackFromPlaylist(int id)
 		{
 			return;
 		}// result == 0 means you click Cancel
-		if (result == 1)
-		{
-			playlistArr.remove(id);
-			tableComponent.updateContent();
-		}// result == 1 means you click OK
+	if (result == 1)
+	{
+		playlistArr.remove(id);
+		tableComponent.updateContent();
+	}// result == 1 means you click OK
 		});
-	
+
 	AlertWindow::showOkCancelBox(MessageBoxIconType::QuestionIcon, "Delete Track", "Are you sure you want to delete this track?", "Yes", "No", {},
+		callback);
+}
+
+void PlaylistComponent::importTracksToPlaylist()
+{
+	auto flags = FileBrowserComponent::canSelectMultipleItems;
+	musicTracksChooser.launchAsync(flags, [this](const FileChooser& chooser)
+		{
+			auto file = chooser.getResults();
+	playlistArr.addArray(file);
+	tableComponent.updateContent();
+		}
+	);
+}
+
+void PlaylistComponent::exportTracksFromPlaylist()
+{
+	auto fileToSave = File::createTempFile("export_playlist.txt");
+
+	for (auto file : playlistArr) {
+		fileToSave.appendText(file.getFullPathName() + "\n");
+	}
+
+	auto flags = FileBrowserComponent::saveMode;
+	exportPlaylist.launchAsync(flags, [this, fileToSave](const FileChooser& chooser)
+		{
+			auto result = chooser.getURLResult();
+	auto name = result.isEmpty() ? String()
+		: (result.isLocalFile() ? result.getLocalFile().getFullPathName()
+			: result.toString(true));
+	if (!result.isEmpty())
+	{
+		std::unique_ptr<InputStream>  wi(fileToSave.createInputStream());
+		std::unique_ptr<OutputStream> wo(result.createOutputStream());
+		if (wi.get() != nullptr && wo.get() != nullptr)
+		{
+			auto numWritten = wo->writeFromInputStream(*wi, -1);
+			jassertquiet(numWritten > 0);
+			wo->flush();
+		}
+	}
+		}
+	);
+}
+
+void PlaylistComponent::importExportedPlaylist()
+{
+	auto flags = FileBrowserComponent::canSelectMultipleItems;
+	importPlaylist.launchAsync(flags, [this](const FileChooser& chooser)
+		{
+			auto result = chooser.getURLResult();
+	auto name = result.isEmpty() ? String()
+		: (result.isLocalFile() ? result.getLocalFile().getFullPathName()
+			: result.toString(true));
+	if (!result.isEmpty())
+	{
+		File file(result.getLocalFile().getFullPathName());
+
+		if (!file.existsAsFile())
+			return;  // file doesn't exist
+
+		juce::FileInputStream inputStream(file); // [2]
+
+		if (!inputStream.openedOk())
+			return;  // failed to open
+
+		while (!inputStream.isExhausted()) // [3]
+		{
+			auto line = inputStream.readNextLine();
+			playlistArr.add(File(line));
+		}
+		tableComponent.updateContent();
+	}
+		}
+	);
+}
+
+void PlaylistComponent::clearPlaylist()
+{
+	const auto callback = juce::ModalCallbackFunction::create([this](int result) {
+		if (result == 0)
+		{
+			return;
+		}// result == 0 means you click Cancel
+	if (result == 1)
+	{
+		playlistArr.clear();
+			tableComponent.updateContent();
+	}// result == 1 means you click OK
+		});
+
+	AlertWindow::showOkCancelBox(MessageBoxIconType::QuestionIcon, "Clear playlist", "Are you sure you want to clear playlist?", "Yes", "No", {},
 		callback);
 }
 
 void PlaylistComponent::buttonClicked(Button* button)
 {
-	int id = std::stoi(button->getComponentID().toStdString());
+	int id;
+	if (button->getComponentID() != "")
+	{
+		id = std::stoi(button->getComponentID().toStdString());
+	}
+
+	// Delete track from playlist
 	if (button->getButtonText() == "DELETE_TRACK")
 	{
 		deleteTrackFromPlaylist(id);
+	}
+
+	else if (button == &importTracksBtn)
+	{
+		importTracksToPlaylist();
+	}
+
+	else if (button == &importPlaylistBtn)
+	{
+		importExportedPlaylist();
+	}
+
+	else if (button == &exportPlaylistBtn)
+	{
+		exportTracksFromPlaylist();
+	}
+
+	else if (button == &clearPlaylistBtn)
+	{
+		clearPlaylist();
 	}
 }
 

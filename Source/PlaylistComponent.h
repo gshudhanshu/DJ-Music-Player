@@ -9,6 +9,7 @@
 */
 
 #pragma once
+#include <fstream>
 
 #include <JuceHeader.h>
 
@@ -47,23 +48,30 @@ private:
 	Array <juce::File> playlistArr;
 	Array<juce::File> filteredPlaylistArr;
 
-	// Actions table
-	// TableListBox actions;
+
 	// Actions buttons
-	TextButton importTracks{ "Import Tracks" };
-	TextButton importPlaylist{ "Import Playlist" };
-	TextButton exportPlaylist{ "Export Playlist" };
-	TextButton clearPlaylist{ "Clear Playlist" };
+	TextButton importTracksBtn{ "Import Tracks" };
+	TextButton importPlaylistBtn{ "Import Playlist" };
+	TextButton exportPlaylistBtn{ "Export Playlist" };
+	TextButton clearPlaylistBtn{ "Clear Playlist" };
 	// Actions search bar
 	TextEditor searchInput{ "Search" };
+
+	// File Choosers/Exporters
+	FileChooser musicTracksChooser{ "Select music tracks"};
+	FileChooser exportPlaylist{ "Export Playlist", File("export_playlist"), "*.txt"};
+	FileChooser importPlaylist{ "Import Playlist", File(), "*.txt" };
+
+
 
 	// Playlist functions
 	void importTracksToPlaylist();
 	void importExportedPlaylist();
 	void exportTracksFromPlaylist();
 	void deleteTrackFromPlaylist(int id);
-	void clearPlaylistFromTracks();
+	void clearPlaylist();
 	void searchTrackInPlaylist(String textString);
+
 
 	DeckGUI* deckGUI1;
 	DeckGUI* deckGUI2;
