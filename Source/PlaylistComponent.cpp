@@ -160,7 +160,7 @@ Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnI
 	// Import svg button SVGs
 	auto playSvg = Drawable::createFromImageData(BinaryData::play_solid_svg, BinaryData::play_solid_svgSize);
 	auto deleteSvg = Drawable::createFromImageData(BinaryData::trash_solid_svg, BinaryData::trash_solid_svgSize);
-
+	//existingComponentToUpdate == nullptr;
 	if (existingComponentToUpdate == nullptr)
 	{
 		if (columnId == 1) {
@@ -189,6 +189,9 @@ Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnI
 			deleteTrackBtn->setComponentID(id);
 			existingComponentToUpdate = deleteTrackBtn;
 		}
+	} else
+	{
+		existingComponentToUpdate->setComponentID(String(rowNumber));
 	}
 	return existingComponentToUpdate;
 }
