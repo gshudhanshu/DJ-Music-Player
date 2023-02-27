@@ -54,6 +54,7 @@ PlaylistComponent::PlaylistComponent(
 
 PlaylistComponent::~PlaylistComponent()
 {
+	tableComponent.setModel(nullptr);
 }
 
 void PlaylistComponent::paint(juce::Graphics& g)
@@ -166,14 +167,17 @@ Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnI
 	// Import svg button SVGs
 	auto playSvg = Drawable::createFromImageData(BinaryData::play_solid_svg, BinaryData::play_solid_svgSize);
 	auto deleteSvg = Drawable::createFromImageData(BinaryData::trash_solid_svg, BinaryData::trash_solid_svgSize);
-
+	existingComponentToUpdate == nullptr;
 	if (existingComponentToUpdate == nullptr)
 	{
 		if (columnId == 1) {
 			DrawableButton* loadDeck1Btn = new DrawableButton{ "LOAD_DECK_1", DrawableButton::ButtonStyle::ImageOnButtonBackground };
 			loadDeck1Btn->setImages(playSvg.get());
 			loadDeck1Btn->addListener(this);
-			String id = String(rowNumber);
+			int index = playlistArrIndex[rowNumber];
+			String id =  String(index);
+			DBG("rowNumber: " + String(rowNumber));
+			DBG("Index: " + id);
 			loadDeck1Btn->setComponentID(id);
 			existingComponentToUpdate = loadDeck1Btn;
 		}
@@ -182,7 +186,8 @@ Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnI
 			DrawableButton* loadDeck2Btn = new DrawableButton{ "LOAD_DECK_2", DrawableButton::ButtonStyle::ImageOnButtonBackground };
 			loadDeck2Btn->setImages(playSvg.get());
 			loadDeck2Btn->addListener(this);
-			String id = String(rowNumber);
+			int index = playlistArrIndex[rowNumber];
+			String id = String(index);
 			loadDeck2Btn->setComponentID(id);
 			existingComponentToUpdate = loadDeck2Btn;
 		}
@@ -191,9 +196,11 @@ Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnI
 			DrawableButton* deleteTrackBtn = new DrawableButton{ "DELETE_TRACK", DrawableButton::ButtonStyle::ImageOnButtonBackground };
 			deleteTrackBtn->setImages(deleteSvg.get());
 			deleteTrackBtn->addListener(this);
-			String id = String(rowNumber);
+			int index = playlistArrIndex[rowNumber];
+			String id = String(index);
 			deleteTrackBtn->setComponentID(id);
 			existingComponentToUpdate = deleteTrackBtn;
+		DBG("========= ");
 		}
 	}
 	return existingComponentToUpdate;
@@ -201,6 +208,7 @@ Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnI
 
 void PlaylistComponent::deleteTrackFromPlaylist(int id)
 {
+	DBG(id);
 	//Reference https://forum.juce.com/t/displaying-okcancel-window/47646
 	const auto callback = juce::ModalCallbackFunction::create([this, id](int result) {
 		if (result == 0)
@@ -215,15 +223,18 @@ void PlaylistComponent::deleteTrackFromPlaylist(int id)
 		}
 		else
 		{
-			String filename = filteredPlaylistArr[id].getFileName();
-			for (int i = 0; i < playlistArr.size(); i++)
-			{
-				if (playlistArr[i].getFileName() == filename)
-				{
-					playlistArr.remove(i);
-					break;
-				}
-			}
+			int index = playlistArrIndex[id];
+			DBG(index);
+			playlistArr.remove(index);
+			//String filename = filteredPlaylistArr[id].getFileName();
+			//for (int i = 0; i < playlistArr.size(); i++)
+			//{
+			//	if (playlistArr[i].getFileName() == filename)
+			//	{
+			//		playlistArr.remove(i);
+			//		break;
+			//	}
+			//}
 		}
 
 		tableComponent.updateContent();
@@ -339,7 +350,7 @@ void PlaylistComponent::buttonClicked(Button* button)
 	// Delete track from playlist
 	if (button->getButtonText() == "DELETE_TRACK")
 	{
-		DBG(id);
+		//DBG(id);
 		deleteTrackFromPlaylist(id);
 	}
 
@@ -376,18 +387,25 @@ void PlaylistComponent::buttonClicked(Button* button)
 
 void PlaylistComponent::searchTrackInPlaylist(String textString)
 {
+	if(textString.isEmpty())
+	{
+		tableComponent.updateContent();
+	}
 	if (textString.isNotEmpty())
 	{
 		filteredPlaylistArr.clear();
-		for (auto file : playlistArr)
+		for (int i = 0; i < playlistArr.size(); ++i)
 		{
-			if (file.getFileName().containsIgnoreCase(textString))
+			if (playlistArr[i].getFileName().containsIgnoreCase(textString))
 			{
-				filteredPlaylistArr.add(file);
+				filteredPlaylistArr.add(playlistArr[i]);
+				playlistArrIndex.add(i);
+				//DBG(i);
+				
 			}
 		}
+		tableComponent.updateContent();
 	}
-	tableComponent.updateContent();
 }
 
 String PlaylistComponent::convertSecTohhmmssFormat(int seconds)

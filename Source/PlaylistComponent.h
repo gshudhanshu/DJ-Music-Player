@@ -48,6 +48,7 @@ private:
 	TableListBox tableComponent;
 	Array <juce::File> playlistArr;
 	Array<juce::File> filteredPlaylistArr;
+	Array <int> playlistArrIndex;
 
 	// Actions buttons
 	TextButton importTracksBtn{ "Import Tracks" };
