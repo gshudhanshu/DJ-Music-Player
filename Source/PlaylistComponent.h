@@ -64,7 +64,6 @@ private:
 	FileChooser importPlaylist{ "Import Playlist", File(), "*.txt" };
 
 
-
 	// Playlist functions
 	void importTracksToPlaylist();
 	void importExportedPlaylist();
@@ -72,6 +71,10 @@ private:
 	void deleteTrackFromPlaylist(int id);
 	void clearPlaylist();
 	void searchTrackInPlaylist(String textString);
+
+	void autoImportDefaultPlaylist(String path);
+	void autoExportDefaultPlaylist(String path);
+
 
 	DeckGUI* deckGUI1;
 	DeckGUI* deckGUI2;

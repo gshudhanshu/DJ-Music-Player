@@ -100,14 +100,43 @@ void DeckGUI::paint (Graphics& g)
 
 void DeckGUI::resized()
 {
+
+    juce::FlexBox mainGUI;
+    juce::FlexBox playerButtons;
+    juce::FlexBox trackInfo;
+    juce::FlexBox albumDiscAndAdjKnobs;
+    playerButtons.items.add(FlexItem(backwardButton).withFlex(1));
+    playerButtons.items.add(FlexItem(playButton).withFlex(1));
+    playerButtons.items.add(FlexItem(pauseButton).withFlex(1));
+    playerButtons.items.add(FlexItem(forwardButton).withFlex(1));
+    playerButtons.items.add(FlexItem(stopButton).withFlex(1));
+    playerButtons.items.add(FlexItem(loopButton).withFlex(1));
+
+    albumDiscAndAdjKnobs.items.add(FlexItem(albumDisc).withFlex(1));
+    albumDiscAndAdjKnobs.items.add(FlexItem(adjKnobs).withFlex(1));
+    albumDiscAndAdjKnobs.items.add(FlexItem(volSlider).withFlex(1));
+
+    trackInfo.items.add(FlexItem(trackTitleTxt).withFlex(1));
+    trackInfo.items.add(FlexItem(trackDurationTxt).withFlex(1));
+
+    mainGUI.flexDirection = juce::FlexBox::Direction::column;
+    mainGUI.items.add(FlexItem(albumDiscAndAdjKnobs).withFlex(1));
+    mainGUI.items.add(FlexItem(trackInfo).withFlex(1));
+    mainGUI.items.add(FlexItem(waveformDisplay).withFlex(1));
+    mainGUI.items.add(FlexItem(playerButtons).withFlex(1));
+
+    mainGUI.performLayout(getLocalBounds().toFloat());
+
+
+
     double rowH = getHeight() / 8;
     double rowW = getWidth() / 6;
-    backwardButton.setBounds(rowW*0, 0, rowW, rowH);
-    playButton.setBounds(rowW*1, 0, rowW, rowH);
-    pauseButton.setBounds(rowW*2, 0, rowW, rowH);
-    forwardButton.setBounds( rowW*3, 0, rowW, rowH);
-    stopButton.setBounds(rowW*4, 0, rowW, rowH);
-    loopButton.setBounds( rowW*5, 0, rowW, rowH);
+    //backwardButton.setBounds(rowW*0, 0, rowW, rowH);
+    //playButton.setBounds(rowW*1, 0, rowW, rowH);
+    //pauseButton.setBounds(rowW*2, 0, rowW, rowH);
+    //forwardButton.setBounds( rowW*3, 0, rowW, rowH);
+    //stopButton.setBounds(rowW*4, 0, rowW, rowH);
+    //loopButton.setBounds( rowW*5, 0, rowW, rowH);
     volSlider.setBounds(0, rowH * 2, getWidth(), rowH);
     speedSlider.setBounds(0, rowH * 3, getWidth(), rowH);
     posSlider.setBounds(0, rowH * 4, getWidth(), rowH);

@@ -10,19 +10,18 @@
 
 #include <JuceHeader.h>
 #include "PlaylistComponent.h"
+#include <future>
 
 //==============================================================================
 PlaylistComponent::PlaylistComponent(
 	DeckGUI* _deckGUI1,
-	DeckGUI* _deckGUI2): deckGUI1(_deckGUI1), deckGUI2(_deckGUI2)
+	DeckGUI* _deckGUI2) : deckGUI1(_deckGUI1), deckGUI2(_deckGUI2)
 {
 	// In your constructor, you should add any child components, and
 	// initialise any special settings that your component needs.
 
-	playlistArr.add(File("G:/UoL/Object-Oriented Programming/Final project/OtoDecks/tracks/hard.mp3"));
-	playlistArr.add(File("G:/UoL/Object-Oriented Programming/Final project/OtoDecks/tracks/hard.mp3"));
-	playlistArr.add(File("G:/UoL/Object-Oriented Programming/Final project/OtoDecks/tracks/hard.mp3"));
-	playlistArr.add(File("G:/UoL/Object-Oriented Programming/Final project/OtoDecks/tracks/Rihanna_Lift_Me_Up_From_Black_Panther_Wakanda_.mp3"));
+	String dir = File::getCurrentWorkingDirectory().getChildFile("playlist.txt").getFullPathName();
+	autoImportDefaultPlaylist(dir );
 
 	tableComponent.getHeader().addColumn("Load A", 1, 50, 50, 50);
 	tableComponent.getHeader().addColumn("Load B", 2, 50, 50, 50);
@@ -49,11 +48,15 @@ PlaylistComponent::PlaylistComponent(
 	importPlaylistBtn.addListener(this);
 	exportPlaylistBtn.addListener(this);
 	clearPlaylistBtn.addListener(this);
-
+	searchInput.onTextChange = [this] { searchTrackInPlaylist(searchInput.getText()); };
 }
 
 PlaylistComponent::~PlaylistComponent()
 {
+	String dir = File::getCurrentWorkingDirectory().getChildFile("playlist.txt").getFullPathName();
+	DBG(dir);
+	autoExportDefaultPlaylist(dir);
+	tableComponent.setModel(nullptr);
 }
 
 void PlaylistComponent::paint(juce::Graphics& g)
@@ -101,6 +104,9 @@ void PlaylistComponent::resized()
 
 int PlaylistComponent::getNumRows()
 {
+	if (!searchInput.isEmpty()) {
+		return filteredPlaylistArr.size();
+	}
 	return playlistArr.size();
 }
 void PlaylistComponent::paintRowBackground(Graphics& g, int rowNumber, int width, int height, bool rowIsSelected)
@@ -116,15 +122,25 @@ void PlaylistComponent::paintRowBackground(Graphics& g, int rowNumber, int width
 }
 void PlaylistComponent::paintCell(Graphics& g, int rowNumber, int columnId, int width, int height, bool rowIsSelected)
 {
+	Array <juce::File> tracksArr;
+	if (!searchInput.isEmpty())
+	{
+		tracksArr = filteredPlaylistArr;
+	}
+	else
+	{
+		tracksArr = playlistArr;
+	}
+
 	if (columnId == 3)
 	{
-		g.drawText(playlistArr[rowNumber].getFileName(), 0, 0, width, height, Justification::centredLeft);
+		g.drawText(tracksArr[rowNumber].getFileName(), 0, 0, width, height, Justification::centredLeft);
 	}
 	if (columnId == 4 || columnId == 5)
 	{
 		AudioFormatManager formatManager;
 		formatManager.registerBasicFormats();
-		ScopedPointer<AudioFormatReader> reader = formatManager.createReaderFor(playlistArr[rowNumber]);
+		ScopedPointer<AudioFormatReader> reader = formatManager.createReaderFor(tracksArr[rowNumber]);
 
 		// if (reader) {
 		//        for (String key : reader->metadataValues.getAllKeys()) {
@@ -145,14 +161,7 @@ void PlaylistComponent::paintCell(Graphics& g, int rowNumber, int columnId, int 
 			String time = convertSecTohhmmssFormat(seconds);
 			g.drawText(time, 0, 0, width, height, Justification::centredLeft);
 		}
-
-		// g.drawText(reader->metadataValues.getValue("artist", ""), 0, 0, width, height, Justification::centredLeft);
 	}
-	// else if(columnId == 5)
-	// {
-	//     g.drawText(reader->metadataValues.getValue("duration", ""), 0, 0, width, height, Justification::centredLeft);
-	// }
-	//
 }
 
 Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnId, bool isRowSelected, Component* existingComponentToUpdate)
@@ -167,7 +176,8 @@ Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnI
 			DrawableButton* loadDeck1Btn = new DrawableButton{ "LOAD_DECK_1", DrawableButton::ButtonStyle::ImageOnButtonBackground };
 			loadDeck1Btn->setImages(playSvg.get());
 			loadDeck1Btn->addListener(this);
-			String id = String(rowNumber);
+			int index = playlistArrIndex[rowNumber];
+			String id = String(index);
 			loadDeck1Btn->setComponentID(id);
 			existingComponentToUpdate = loadDeck1Btn;
 		}
@@ -176,7 +186,8 @@ Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnI
 			DrawableButton* loadDeck2Btn = new DrawableButton{ "LOAD_DECK_2", DrawableButton::ButtonStyle::ImageOnButtonBackground };
 			loadDeck2Btn->setImages(playSvg.get());
 			loadDeck2Btn->addListener(this);
-			String id = String(rowNumber);
+			int index = playlistArrIndex[rowNumber];
+			String id = String(index);
 			loadDeck2Btn->setComponentID(id);
 			existingComponentToUpdate = loadDeck2Btn;
 		}
@@ -185,11 +196,13 @@ Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnI
 			DrawableButton* deleteTrackBtn = new DrawableButton{ "DELETE_TRACK", DrawableButton::ButtonStyle::ImageOnButtonBackground };
 			deleteTrackBtn->setImages(deleteSvg.get());
 			deleteTrackBtn->addListener(this);
-			String id = String(rowNumber);
+			int index = playlistArrIndex[rowNumber];
+			String id = String(index);
 			deleteTrackBtn->setComponentID(id);
 			existingComponentToUpdate = deleteTrackBtn;
 		}
-	} else
+	}
+	else
 	{
 		existingComponentToUpdate->setComponentID(String(rowNumber));
 	}
@@ -206,8 +219,19 @@ void PlaylistComponent::deleteTrackFromPlaylist(int id)
 		}// result == 0 means you click Cancel
 	if (result == 1)
 	{
-		playlistArr.remove(id);
+		if (searchInput.isEmpty())
+		{
+			playlistArr.remove(id);
+		}
+
+		else
+		{
+			int index = playlistArrIndex[id];
+			DBG(index);
+			playlistArr.remove(index);
+		}
 		tableComponent.updateContent();
+		searchTrackInPlaylist(searchInput.getText());
 	}// result == 1 means you click OK
 		});
 
@@ -220,7 +244,7 @@ void PlaylistComponent::importTracksToPlaylist()
 	auto flags = FileBrowserComponent::canSelectMultipleItems;
 	musicTracksChooser.launchAsync(flags, [this](const FileChooser& chooser)
 		{
-			auto file = chooser.getResults();
+		auto file = chooser.getResults();
 	playlistArr.addArray(file);
 	tableComponent.updateContent();
 		}
@@ -257,6 +281,38 @@ void PlaylistComponent::exportTracksFromPlaylist()
 	);
 }
 
+void PlaylistComponent::autoExportDefaultPlaylist(String path)
+{
+
+	//auto fileToSave = File::createTempFile("export_playlist.txt");
+	//for (auto file : playlistArr) {
+	//	fileToSave.appendText(file.getFullPathName() + "\n");
+	//}
+
+	//URL result = URL{ File(path).getFullPathName() };
+	//std::unique_ptr<InputStream>  wi(fileToSave.createInputStream());
+	//std::unique_ptr<OutputStream> wo(result.createOutputStream());
+	//if (wi.get() != nullptr && wo.get() != nullptr)
+	//{
+	//	DBG("Writing to file");
+	//	auto numWritten = wo->writeFromInputStream(*wi, -1);
+	//	jassertquiet(numWritten > 0);
+	//	wo->flush();
+	//}
+
+	auto file = juce::File::getCurrentWorkingDirectory().getChildFile("playlist.txt");
+	FileOutputStream output(file);
+	if (output.openedOk())
+	{
+		output.setPosition(0);  // default would append
+		output.truncate();
+		for (auto file : playlistArr) {
+			output.writeText(file.getFullPathName()+ "\n", false, false, "");
+		}
+	}
+}
+
+
 void PlaylistComponent::importExportedPlaylist()
 {
 	auto flags = FileBrowserComponent::canSelectMultipleItems;
@@ -268,25 +324,30 @@ void PlaylistComponent::importExportedPlaylist()
 			: result.toString(true));
 	if (!result.isEmpty())
 	{
-		File file(result.getLocalFile().getFullPathName());
-
-		if (!file.existsAsFile())
-			return;  // file doesn't exist
-
-		juce::FileInputStream inputStream(file); // [2]
-
-		if (!inputStream.openedOk())
-			return;  // failed to open
-
-		while (!inputStream.isExhausted()) // [3]
-		{
-			auto line = inputStream.readNextLine();
-			playlistArr.add(File(line));
-		}
-		tableComponent.updateContent();
+		autoImportDefaultPlaylist(result.getLocalFile().getFullPathName());
 	}
 		}
 	);
+}
+
+void PlaylistComponent::autoImportDefaultPlaylist(String path)
+{
+	File file(path);
+
+	if (!file.existsAsFile())
+		return;  // file doesn't exist
+
+	juce::FileInputStream inputStream(file); // [2]
+
+	if (!inputStream.openedOk())
+		return;  // failed to open
+
+	while (!inputStream.isExhausted()) // [3]
+	{
+		auto line = inputStream.readNextLine();
+		playlistArr.add(File(line));
+	}
+	tableComponent.updateContent();
 }
 
 void PlaylistComponent::clearPlaylist()
@@ -299,12 +360,30 @@ void PlaylistComponent::clearPlaylist()
 	if (result == 1)
 	{
 		playlistArr.clear();
-			tableComponent.updateContent();
+		tableComponent.updateContent();
 	}// result == 1 means you click OK
 		});
 
 	AlertWindow::showOkCancelBox(MessageBoxIconType::QuestionIcon, "Clear playlist", "Are you sure you want to clear playlist?", "Yes", "No", {},
 		callback);
+}
+
+void PlaylistComponent::searchTrackInPlaylist(String textString)
+{
+	if (textString.isNotEmpty())
+	{
+		filteredPlaylistArr.clear();
+		for (int i = 0; i < playlistArr.size(); ++i)
+		{
+			if (playlistArr[i].getFileName().containsIgnoreCase(textString))
+			{
+				filteredPlaylistArr.add(playlistArr[i]);
+				playlistArrIndex.add(i);
+				//DBG(i);
+			}
+		}
+	}
+	tableComponent.updateContent();
 }
 
 void PlaylistComponent::buttonClicked(Button* button)
@@ -315,14 +394,13 @@ void PlaylistComponent::buttonClicked(Button* button)
 		id = std::stoi(button->getComponentID().toStdString());
 	}
 
-
 	// Delete track from playlist
 	if (button->getButtonText() == "DELETE_TRACK")
 	{
 		deleteTrackFromPlaylist(id);
 	}
 
-	else if(button->getButtonText() == "LOAD_DECK_1")
+	else if (button->getButtonText() == "LOAD_DECK_1")
 	{
 		DBG("LOAD_DECK_1");
 		deckGUI1->loadTrackToDeck(playlistArr[id]);
@@ -353,8 +431,6 @@ void PlaylistComponent::buttonClicked(Button* button)
 	{
 		clearPlaylist();
 	}
-
-
 }
 
 String PlaylistComponent::convertSecTohhmmssFormat(int seconds)
