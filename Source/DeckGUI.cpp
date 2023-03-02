@@ -15,8 +15,8 @@
 DeckGUI::DeckGUI(DJAudioPlayer* _player,
     juce::AudioFormatManager& formatManagerToUse,
     juce::AudioThumbnailCache& cacheToUse)
-    : player(_player), waveformDisplay(formatManagerToUse, cacheToUse)
-
+    : player(_player), waveformDisplay(formatManagerToUse, cacheToUse),
+    volumeMeterL(formatManagerToUse, cacheToUse), volumeMeterR(formatManagerToUse, cacheToUse)
 
 {
     // Import svg button SVGs
@@ -35,6 +35,34 @@ DeckGUI::DeckGUI(DJAudioPlayer* _player,
     loopButton.setImages(loopSvg.get());
 
 
+    highPassSlider.setSliderStyle(juce::Slider::Rotary);
+    highPassSlider.setRange(0.0, 1.0);
+    highPassSlider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+
+    lowPassSlider.setSliderStyle(juce::Slider::Rotary);
+    lowPassSlider.setRange(0.0, 1.0);
+    lowPassSlider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+
+
+    speedSlider.setSliderStyle(juce::Slider::Rotary);
+    speedSlider.setRange(0.0, 5.0);
+    speedSlider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+
+
+    volSlider.setSliderStyle(juce::Slider::LinearVertical);
+	volSlider.setRange(0.0, 1.0);
+    volSlider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+
+
+    posSlider.setRange(0.0, 1.0);
+
+
+	trackTitleTxt.setText("Track not loaded");
+    trackDurationTxt.setText("00:00");
+    trackTitleTxt.isReadOnly();
+    trackDurationTxt.isReadOnly();
+
+
     addAndMakeVisible(playButton);
     addAndMakeVisible(stopButton);
     addAndMakeVisible(pauseButton);
@@ -44,11 +72,19 @@ DeckGUI::DeckGUI(DJAudioPlayer* _player,
     addAndMakeVisible(loadButton);
 
        
+    addAndMakeVisible(volumeMeterL);
+    addAndMakeVisible(volumeMeterR);
     addAndMakeVisible(volSlider);
+
+    addAndMakeVisible(highPassSlider);
+    addAndMakeVisible(lowPassSlider);
     addAndMakeVisible(speedSlider);
+
     addAndMakeVisible(posSlider);
 
     addAndMakeVisible(waveformDisplay);
+    addAndMakeVisible(trackTitleTxt);
+    addAndMakeVisible(trackDurationTxt);
 
 
     playButton.addListener(this);
@@ -60,15 +96,14 @@ DeckGUI::DeckGUI(DJAudioPlayer* _player,
     loadButton.addListener(this);
 
     volSlider.addListener(this);
+    highPassSlider.addListener(this);
+    lowPassSlider.addListener(this);
     speedSlider.addListener(this);
     posSlider.addListener(this);
 
 
-    volSlider.setRange(0.0, 1.0);
-    speedSlider.setRange(0.0, 100.0);
-    posSlider.setRange(0.0, 1.0);
-
     startTimer(500);
+
 
 
 }
@@ -104,7 +139,11 @@ void DeckGUI::resized()
     juce::FlexBox mainGUI;
     juce::FlexBox playerButtons;
     juce::FlexBox trackInfo;
-    juce::FlexBox albumDiscAndAdjKnobs;
+    juce::FlexBox diskArtAdjKnobsAndVol;
+    juce::FlexBox adjKnobs;
+    juce::FlexBox volumeMeterAndVolSlider;
+    juce::FlexBox trackTitleDuration;
+
     playerButtons.items.add(FlexItem(backwardButton).withFlex(1));
     playerButtons.items.add(FlexItem(playButton).withFlex(1));
     playerButtons.items.add(FlexItem(pauseButton).withFlex(1));
@@ -112,36 +151,49 @@ void DeckGUI::resized()
     playerButtons.items.add(FlexItem(stopButton).withFlex(1));
     playerButtons.items.add(FlexItem(loopButton).withFlex(1));
 
-    albumDiscAndAdjKnobs.items.add(FlexItem(albumDisc).withFlex(1));
-    albumDiscAndAdjKnobs.items.add(FlexItem(adjKnobs).withFlex(1));
-    albumDiscAndAdjKnobs.items.add(FlexItem(volSlider).withFlex(1));
 
-    trackInfo.items.add(FlexItem(trackTitleTxt).withFlex(1));
+    volumeMeterAndVolSlider.items.add(FlexItem(volumeMeterL).withFlex(1));
+    volumeMeterAndVolSlider.items.add(FlexItem(volSlider).withFlex(1));
+    volumeMeterAndVolSlider.items.add(FlexItem(volumeMeterR).withFlex(1));
+
+    adjKnobs.flexDirection = juce::FlexBox::Direction::column;
+    adjKnobs.items.add(FlexItem(lowPassSlider).withFlex(1));
+    adjKnobs.items.add(FlexItem(highPassSlider).withFlex(1));
+    adjKnobs.items.add(FlexItem(speedSlider).withFlex(1));
+
+	//diskArtAdjKnobsAndVol.items.add(FlexItem(discArt).withFlex(1));
+	diskArtAdjKnobsAndVol.items.add(FlexItem().withFlex(5));
+    diskArtAdjKnobsAndVol.items.add(FlexItem(adjKnobs).withFlex(1));
+    diskArtAdjKnobsAndVol.items.add(FlexItem(volumeMeterAndVolSlider).withFlex(1));
+
+
+    trackInfo.items.add(FlexItem(trackTitleTxt).withFlex(3));
     trackInfo.items.add(FlexItem(trackDurationTxt).withFlex(1));
 
+
     mainGUI.flexDirection = juce::FlexBox::Direction::column;
-    mainGUI.items.add(FlexItem(albumDiscAndAdjKnobs).withFlex(1));
+    mainGUI.items.add(FlexItem(diskArtAdjKnobsAndVol).withFlex(5));
     mainGUI.items.add(FlexItem(trackInfo).withFlex(1));
     mainGUI.items.add(FlexItem(waveformDisplay).withFlex(1));
     mainGUI.items.add(FlexItem(playerButtons).withFlex(1));
+	mainGUI.items.add(FlexItem(loadButton).withFlex(1));
 
     mainGUI.performLayout(getLocalBounds().toFloat());
 
 
-
-    double rowH = getHeight() / 8;
-    double rowW = getWidth() / 6;
+    //double rowH = getHeight() / 8;
+    //double rowW = getWidth() / 6;
     //backwardButton.setBounds(rowW*0, 0, rowW, rowH);
     //playButton.setBounds(rowW*1, 0, rowW, rowH);
     //pauseButton.setBounds(rowW*2, 0, rowW, rowH);
     //forwardButton.setBounds( rowW*3, 0, rowW, rowH);
     //stopButton.setBounds(rowW*4, 0, rowW, rowH);
     //loopButton.setBounds( rowW*5, 0, rowW, rowH);
-    volSlider.setBounds(0, rowH * 2, getWidth(), rowH);
-    speedSlider.setBounds(0, rowH * 3, getWidth(), rowH);
-    posSlider.setBounds(0, rowH * 4, getWidth(), rowH);
-    waveformDisplay.setBounds(0, rowH * 5, getWidth(), rowH * 2);
-    loadButton.setBounds(0, rowH * 7, getWidth(), rowH);
+    //volSlider.setBounds(0, rowH * 2, getWidth(), rowH);
+    //speedSlider.setBounds(0, rowH * 3, getWidth(), rowH);
+    //posSlider.setBounds(0, rowH * 4, getWidth(), rowH);
+    //waveformDisplay.setBounds(0, rowH * 5, getWidth(), rowH * 2);
+    //loadButton.setBounds(0, rowH * 7, getWidth(), rowH);
 
 }
 
@@ -166,7 +218,7 @@ void DeckGUI::buttonClicked(Button* button)
         {
             player->loadURL(URL{chooser.getResult()});
             // and now the waveformDisplay as well
-            waveformDisplay.loadURL(URL{chooser.getResult()}); 
+            waveformDisplay.loadURL(URL{chooser.getResult()});
         });
     }
     // if (button == &loadButton)
@@ -221,6 +273,8 @@ void DeckGUI::loadTrackToDeck(File file)
 {
     player->loadURL(URL{ file });
     waveformDisplay.loadURL(URL{ file });
+    trackTitleTxt.setText(player->getTrackDetails()[0]);
+    trackDurationTxt.setText(player->getTrackDetails()[1]);
 }
 
 
@@ -229,7 +283,19 @@ void DeckGUI::timerCallback()
     //std::cout << "DeckGUI::timerCallback" << std::endl;
     waveformDisplay.setPositionRelative(
     player->getPositionRelative());
+    volumeMeterL.repaint();
+    volumeMeterR.repaint();
+    DBG("test");
 }
 
     
-
+//void DeckGUI::setTrackDetails(String title, int seconds)
+//{
+//    trackTitleTxt.setText(title);
+//    int hr = (seconds / 3600);
+//    int min = (seconds / 60) % 60;
+//    int sec = (seconds % 60);
+//    String time = String(hr) + ":" + String(min) + ":" + String(sec);
+//    trackTitleTxt.setText(time);
+//}
+//

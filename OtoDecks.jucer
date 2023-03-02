@@ -16,6 +16,10 @@
       <FILE id="mQqrmU" name="trash_solid.svg" compile="0" resource="1" file="Assets/trash_solid.svg"/>
     </GROUP>
     <GROUP id="{356C603F-01E1-55B2-02A0-F2D89D9A59E6}" name="Source">
+      <FILE id="FYz33H" name="DiscArt.cpp" compile="1" resource="0" file="Source/DiscArt.cpp"/>
+      <FILE id="f8aBmJ" name="DiscArt.h" compile="0" resource="0" file="Source/DiscArt.h"/>
+      <FILE id="tZu8GJ" name="VolumeMeter.cpp" compile="1" resource="0" file="Source/VolumeMeter.cpp"/>
+      <FILE id="Bk5nnO" name="VolumeMeter.h" compile="0" resource="0" file="Source/VolumeMeter.h"/>
       <FILE id="QcjyzR" name="PlaylistComponent.cpp" compile="1" resource="0"
             file="Source/PlaylistComponent.cpp"/>
       <FILE id="hY42Yf" name="PlaylistComponent.h" compile="0" resource="0"

@@ -13,6 +13,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "DJAudioPlayer.h"
 #include "WaveformDisplay.h"
+#include "VolumeMeter.h"
 
 //==============================================================================
 /*
@@ -54,18 +55,32 @@ private:
     DrawableButton forwardButton{ "FORWARD", DrawableButton::ButtonStyle::ImageOnButtonBackground };
     DrawableButton backwardButton{ "BACKWARD",DrawableButton::ButtonStyle::ImageOnButtonBackground };
     TextButton loadButton{ "LOAD" };
-    
 
-    String trackTitle;
 
     Slider volSlider; 
+
     Slider speedSlider;
+    Label speedSliderLabel;
     Slider posSlider;
+
+    Slider highPassSlider;
+    Label highPassSliderLabel;
+
+    Slider lowPassSlider;
+    Label lowPassSliderLabel;
 
     FileChooser fChooser{"Select a file..."};
 
     DJAudioPlayer* player;
     WaveformDisplay waveformDisplay;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DeckGUI)
+    VolumeMeter volumeMeterL;
+    VolumeMeter volumeMeterR;
+
+
+    TextEditor trackTitleTxt;
+    TextEditor trackDurationTxt;
+
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DeckGUI)
 };

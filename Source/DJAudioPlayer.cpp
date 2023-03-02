@@ -10,11 +10,15 @@ Author:  matthew
 
 #include "DJAudioPlayer.h"
 
-DJAudioPlayer::DJAudioPlayer(AudioFormatManager& _formatManager) 
+DJAudioPlayer::DJAudioPlayer(AudioFormatManager& _formatManager)
 : formatManager(_formatManager)
 {
 
 }
+
+
+
+
 DJAudioPlayer::~DJAudioPlayer()
 {
     transportSource.setSource(nullptr);
@@ -44,7 +48,10 @@ void DJAudioPlayer::loadURL(URL audioURL)
         std::unique_ptr<AudioFormatReaderSource> newSource (new AudioFormatReaderSource (reader, 
 true)); 
         transportSource.setSource (newSource.get(), 0, nullptr, reader->sampleRate);             
-        readerSource.reset (newSource.release());          
+        readerSource.reset (newSource.release());
+
+        trackTitle = audioURL.getFileName();
+        trackSeconds = transportSource.getLengthInSeconds();
     }
 }
 void DJAudioPlayer::setGain(double gain)
@@ -98,4 +105,24 @@ void DJAudioPlayer::stop()
 double DJAudioPlayer::getPositionRelative()
 {
     return transportSource.getCurrentPosition() / transportSource.getLengthInSeconds();
+}
+
+Array <String> DJAudioPlayer::getTrackDetails()
+{
+    String hr0, min0, sec0;
+    int hr = (trackSeconds / 3600);
+    int min = (trackSeconds / 60) % 60;
+    int sec = (trackSeconds % 60);
+    if (hr < 10) {
+        hr0 = "0";
+    }
+    if (min < 10) {
+        min0 = "0";
+    }
+    if (sec < 10) {
+        sec0 = "0";
+    }
+
+    String time = hr0 + String(hr) + ":" + min0 + String(min) + ":" + sec0 + String(sec);
+    return {trackTitle, time };
 }

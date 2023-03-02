@@ -435,9 +435,20 @@ void PlaylistComponent::buttonClicked(Button* button)
 
 String PlaylistComponent::convertSecTohhmmssFormat(int seconds)
 {
+	String hr0, min0, sec0;
 	int hr = (seconds / 3600);
 	int min = (seconds / 60) % 60;
 	int sec = (seconds % 60);
-	String time = String(hr) + ":" + String(min) + ":" + String(sec);
+	if (hr < 10) {
+		hr0 = "0";
+	}
+	if (min < 10) {
+		min0 = "0";
+	}
+	if (sec < 10) {
+		sec0 = "0";
+	}
+
+	String time = hr0+String(hr) + ":" + min0+String(min) + ":" + sec0+ String(sec);
 	return time;
 }

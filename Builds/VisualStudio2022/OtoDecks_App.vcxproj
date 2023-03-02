@@ -141,6 +141,8 @@
     <Lib/>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\DiscArt.cpp"/>
+    <ClCompile Include="..\..\Source\VolumeMeter.cpp"/>
     <ClCompile Include="..\..\Source\PlaylistComponent.cpp"/>
     <ClCompile Include="..\..\Source\AlbumCover.cpp"/>
     <ClCompile Include="..\..\Source\WaveformDisplay.cpp"/>
@@ -2476,6 +2478,8 @@
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_opengl.cpp"/>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\DiscArt.h"/>
+    <ClInclude Include="..\..\Source\VolumeMeter.h"/>
     <ClInclude Include="..\..\Source\PlaylistComponent.h"/>
     <ClInclude Include="..\..\Source\AlbumCover.h"/>
     <ClInclude Include="..\..\Source\Header.h"/>

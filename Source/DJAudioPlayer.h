@@ -9,10 +9,11 @@
 */
 
 #pragma once
-
 #include "../JuceLibraryCode/JuceHeader.h"
 
-class DJAudioPlayer : public AudioSource {
+class DJAudioPlayer : public AudioSource
+
+{
   public:
 
     DJAudioPlayer(AudioFormatManager& _formatManager);
@@ -34,6 +35,7 @@ class DJAudioPlayer : public AudioSource {
 
     /** get the relative position of the playhead */
     double getPositionRelative();
+    Array <String> getTrackDetails();
 
 private:
     AudioFormatManager& formatManager;
@@ -41,6 +43,8 @@ private:
     AudioTransportSource transportSource; 
     ResamplingAudioSource resampleSource{&transportSource, false, 2};
 
+    String trackTitle;
+    int trackSeconds;
 };
 
 
