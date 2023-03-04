@@ -59,6 +59,7 @@ void MainComponent::prepareToPlay(int samplesPerBlockExpected, double sampleRate
 }
 void MainComponent::getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill)
 {
+
 	mixerSource.getNextAudioBlock(bufferToFill);
 }
 

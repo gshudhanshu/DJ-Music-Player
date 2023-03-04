@@ -33,6 +33,45 @@ void DJAudioPlayer::getNextAudioBlock (const AudioSourceChannelInfo& bufferToFil
 {
     resampleSource.getNextAudioBlock(bufferToFill);
 
+    if(reader != nullptr)
+    {
+        AudioBuffer<float> buffer(2, bufferToFill.numSamples); // create new buffer for channel data
+
+        buffer.copyFrom(0, 0, bufferToFill.buffer->getReadPointer(0), bufferToFill.numSamples);
+        buffer.copyFrom(1, 0, bufferToFill.buffer->getReadPointer(1), bufferToFill.numSamples);
+
+
+        //AudioBuffer<float> leftChannel(1, bufferToFill.numSamples); // create new buffer for left channel data
+        //AudioBuffer<float> rightChannel(1, bufferToFill.numSamples); // create new buffer for left channel data
+
+        //leftChannel.copyFrom(0, 0, bufferToFill.buffer->getReadPointer(0), bufferToFill.numSamples);
+    	// copy left channel data from bufferToFill to leftChannel
+
+    	//rightChannel.copyFrom(0, 0, bufferToFill.buffer->getReadPointer(1), bufferToFill.numSamples);
+    	// copy right channel data from bufferToFill to rightChannel
+
+        //// Calculate RMS values for left and right channels
+        //float leftRMS = buffer.getRMSLevel(0, 0, bufferToFill.numSamples);
+        //float rightRMS = buffer.getRMSLevel(0, 0, bufferToFill.numSamples);
+
+        // Calculate RMS values for left and right channels
+        float leftRMS = buffer.getMagnitude(0, 0, bufferToFill.numSamples);
+        //float leftRMS = buffer.getRMSLevel(0, 0, bufferToFill.numSamples);
+        float rightRMS = buffer.getRMSLevel(1, 0, bufferToFill.numSamples);
+
+
+        // Convert RMS values to Decibel values
+        float referenceValue = 0.5f;
+
+        //leftDB = Decibels::gainToDecibels(leftRMS* referenceValue);
+        rightDB = Decibels::gainToDecibels(rightRMS* referenceValue);
+
+        leftDB = 20.0f * std::log10(leftRMS / referenceValue);
+        //rightDB = 20.0f * std::log10(rightRMS / referenceValue);
+
+	}
+
+
 }
 void DJAudioPlayer::releaseResources()
 {
@@ -42,7 +81,7 @@ void DJAudioPlayer::releaseResources()
 
 void DJAudioPlayer::loadURL(URL audioURL)
 {
-    auto* reader = formatManager.createReaderFor(audioURL.createInputStream(false));
+    reader = formatManager.createReaderFor(audioURL.createInputStream(false));
     if (reader != nullptr) // good file!
     {       
         std::unique_ptr<AudioFormatReaderSource> newSource (new AudioFormatReaderSource (reader, 
@@ -125,4 +164,9 @@ Array <String> DJAudioPlayer::getTrackDetails()
 
     String time = hr0 + String(hr) + ":" + min0 + String(min) + ":" + sec0 + String(sec);
     return {trackTitle, time };
+}
+
+Array <float> DJAudioPlayer::getDecible()
+{
+	return {leftDB, rightDB};
 }

@@ -619,10 +619,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\DiscArt.cpp">
+    <ClCompile Include="..\..\Source\LevelMeter.cpp">
       <Filter>OtoDecks\Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\VolumeMeter.cpp">
+    <ClCompile Include="..\..\Source\DiscArt.cpp">
       <Filter>OtoDecks\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\PlaylistComponent.cpp">
@@ -3138,10 +3138,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Source\DiscArt.h">
+    <ClInclude Include="..\..\Source\LevelMeter.h">
       <Filter>OtoDecks\Source</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\VolumeMeter.h">
+    <ClInclude Include="..\..\Source\DiscArt.h">
       <Filter>OtoDecks\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\PlaylistComponent.h">

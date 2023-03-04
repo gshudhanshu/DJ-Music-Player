@@ -15,10 +15,11 @@
 DeckGUI::DeckGUI(DJAudioPlayer* _player,
     juce::AudioFormatManager& formatManagerToUse,
     juce::AudioThumbnailCache& cacheToUse)
-    : player(_player), waveformDisplay(formatManagerToUse, cacheToUse),
-    volumeMeterL(formatManagerToUse, cacheToUse), volumeMeterR(formatManagerToUse, cacheToUse)
+    : player(_player), waveformDisplay(formatManagerToUse, cacheToUse), levelMeterL(_player), levelMeterR(_player)
 
 {
+
+
     // Import svg button SVGs
     auto playSvg = Drawable::createFromImageData(BinaryData::play_solid_svg, BinaryData::play_solid_svgSize);
     auto backwardSvg = Drawable::createFromImageData(BinaryData::backward_solid_svg, BinaryData::backward_solid_svgSize);
@@ -53,6 +54,8 @@ DeckGUI::DeckGUI(DJAudioPlayer* _player,
 	volSlider.setRange(0.0, 1.0);
     volSlider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 
+    levelMeterL.setChannel(0);
+    levelMeterR.setChannel(1);
 
     posSlider.setRange(0.0, 1.0);
 
@@ -72,8 +75,8 @@ DeckGUI::DeckGUI(DJAudioPlayer* _player,
     addAndMakeVisible(loadButton);
 
        
-    addAndMakeVisible(volumeMeterL);
-    addAndMakeVisible(volumeMeterR);
+    addAndMakeVisible(levelMeterL);
+    addAndMakeVisible(levelMeterR);
     addAndMakeVisible(volSlider);
 
     addAndMakeVisible(highPassSlider);
@@ -102,7 +105,8 @@ DeckGUI::DeckGUI(DJAudioPlayer* _player,
     posSlider.addListener(this);
 
 
-    startTimer(500);
+    //startTimer(500);
+    startTimerHz(24);
 
 
 
@@ -152,9 +156,9 @@ void DeckGUI::resized()
     playerButtons.items.add(FlexItem(loopButton).withFlex(1));
 
 
-    volumeMeterAndVolSlider.items.add(FlexItem(volumeMeterL).withFlex(1));
+    volumeMeterAndVolSlider.items.add(FlexItem(levelMeterL).withFlex(1));
     volumeMeterAndVolSlider.items.add(FlexItem(volSlider).withFlex(1));
-    volumeMeterAndVolSlider.items.add(FlexItem(volumeMeterR).withFlex(1));
+    volumeMeterAndVolSlider.items.add(FlexItem(levelMeterR).withFlex(1));
 
     adjKnobs.flexDirection = juce::FlexBox::Direction::column;
     adjKnobs.items.add(FlexItem(lowPassSlider).withFlex(1));
@@ -280,12 +284,10 @@ void DeckGUI::loadTrackToDeck(File file)
 
 void DeckGUI::timerCallback()
 {
-    //std::cout << "DeckGUI::timerCallback" << std::endl;
     waveformDisplay.setPositionRelative(
     player->getPositionRelative());
-    volumeMeterL.repaint();
-    volumeMeterR.repaint();
-    DBG("test");
+    levelMeterL.setValue(player->getDecible()[0]);
+    levelMeterR.setValue(player->getDecible()[1]);
 }
 
     
@@ -298,4 +300,4 @@ void DeckGUI::timerCallback()
 //    String time = String(hr) + ":" + String(min) + ":" + String(sec);
 //    trackTitleTxt.setText(time);
 //}
-//
+

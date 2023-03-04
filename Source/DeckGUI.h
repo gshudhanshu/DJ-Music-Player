@@ -13,7 +13,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "DJAudioPlayer.h"
 #include "WaveformDisplay.h"
-#include "VolumeMeter.h"
+#include "LevelMeter.h"
 
 //==============================================================================
 /*
@@ -74,8 +74,8 @@ private:
     DJAudioPlayer* player;
     WaveformDisplay waveformDisplay;
 
-    VolumeMeter volumeMeterL;
-    VolumeMeter volumeMeterR;
+    LevelMeter levelMeterL;
+    LevelMeter levelMeterR;
 
 
     TextEditor trackTitleTxt;

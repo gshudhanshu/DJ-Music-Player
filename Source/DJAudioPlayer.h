@@ -33,11 +33,15 @@ class DJAudioPlayer : public AudioSource
     void start();
     void stop();
 
+    Array <float> getDecible();
+
     /** get the relative position of the playhead */
     double getPositionRelative();
     Array <String> getTrackDetails();
 
 private:
+
+    AudioFormatReader* reader;
     AudioFormatManager& formatManager;
     std::unique_ptr<AudioFormatReaderSource> readerSource;
     AudioTransportSource transportSource; 
@@ -45,6 +49,9 @@ private:
 
     String trackTitle;
     int trackSeconds;
+
+    float leftDB;
+    float rightDB;
 };
 
 
