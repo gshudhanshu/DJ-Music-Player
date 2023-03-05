@@ -28,10 +28,18 @@ class DJAudioPlayer : public AudioSource
     void setSpeed(double ratio);
     void setPosition(double posInSecs);
     void setPositionRelative(double pos);
+
+    void setBass(double bass);
+    void setTreble(double treble);
+
     
 
     void start();
     void stop();
+    void backward();
+    void forward();
+    void pause();
+    void loop();
 
     Array <float> getDecible();
 
@@ -43,9 +51,18 @@ private:
 
     AudioFormatReader* reader;
     AudioFormatManager& formatManager;
+
+    double trackSampleRate;
+    int bassCutOffFreq = 300;
+    int trebleCutOffFreq = 3000;
+
     std::unique_ptr<AudioFormatReaderSource> readerSource;
     AudioTransportSource transportSource; 
     ResamplingAudioSource resampleSource{&transportSource, false, 2};
+    IIRFilterAudioSource bassSource{ &resampleSource, false };
+    IIRFilterAudioSource trebleSource{ &bassSource, false };
+    IIRFilterAudioSource filteredResampleSource{ &trebleSource, false };
+
 
     String trackTitle;
     int trackSeconds;

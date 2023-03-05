@@ -76,7 +76,8 @@ void LevelMeter::setChannel(int channel)
 
 void LevelMeter::updateValue()
 {
-    float smoothingFactor = 0.1f;
+    float smoothingFactor = 0.5f;
+    //decibles += smoothingFactor * (targetValue - decibles);
     decibles += smoothingFactor * (targetValue - decibles);
 }
 

@@ -14,9 +14,9 @@
 //==============================================================================
 DiscArt::DiscArt()
 {
-    // In your constructor, you should add any child components, and
-    // initialise any special settings that your component needs.
-
+    mDiscColour = Colours::blue;
+    mRotationAngle = 0.0f;
+    startTimerHz(60);
 }
 
 DiscArt::~DiscArt()
@@ -25,27 +25,38 @@ DiscArt::~DiscArt()
 
 void DiscArt::paint (juce::Graphics& g)
 {
-    /* This demo code just fills the component's background and
-       draws some placeholder text to get you started.
+    g.fillAll(Colours::white); // Fill the background with white
+    //g.setGradientFill(ColourGradient(mDiscColour.darker(), mDiscColour.brighter(), getLocalBounds().getCentre().toFloat(), mDiscColour, true)); // Set the gradient fill of the disc
+    g.fillEllipse(getLocalBounds().toFloat()); // Draw the disc
+    g.setColour(Colours::black); // Set the color of the border
+    //g.setThickness(3.0f); // Set the thickness of the border
+    g.drawEllipse(getLocalBounds().toFloat(), 3.0f); // Draw the border
 
-       You should replace everything in this method with your own
-       drawing code..
-    */
-
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));   // clear the background
-
-    g.setColour (juce::Colours::grey);
-    g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
-
-    g.setColour (juce::Colours::white);
-    g.setFont (14.0f);
-    g.drawText ("DiscArt", getLocalBounds(),
-                juce::Justification::centred, true);   // draw some placeholder text
 }
 
 void DiscArt::resized()
 {
-    // This method is where you should set the bounds of any child
-    // components that your component contains..
+    // Set the center point of the disc to the center of the component
+    mCenterX = getWidth() / 2.0f;
+    mCenterY = getHeight() / 2.0f;
 
+}
+
+void DiscArt::timerCallback()
+{
+//    mRotationAngle += 0.5f;
+//    if (mRotationAngle >= 360.0f)
+//        mRotationAngle = 0.0f;
+//    setTransform(AffineTransform::rotation(mRotationAngle * MathConstants<float>::pi / 180.0f, getWidth() / 2.0f, getHeight() / 2.0f));
+}
+
+
+void DiscArt::setDiscColour(Colour newColour)
+{
+    mDiscColour = newColour;
+}
+
+void DiscArt::setRotationSpeed(float newSpeed)
+{
+    mRotationSpeed = newSpeed;
 }

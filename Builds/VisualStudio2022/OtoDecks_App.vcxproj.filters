@@ -628,9 +628,6 @@
     <ClCompile Include="..\..\Source\PlaylistComponent.cpp">
       <Filter>OtoDecks\Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\AlbumCover.cpp">
-      <Filter>OtoDecks\Source</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\WaveformDisplay.cpp">
       <Filter>OtoDecks\Source</Filter>
     </ClCompile>
@@ -3145,9 +3142,6 @@
       <Filter>OtoDecks\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\PlaylistComponent.h">
-      <Filter>OtoDecks\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\AlbumCover.h">
       <Filter>OtoDecks\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Header.h">

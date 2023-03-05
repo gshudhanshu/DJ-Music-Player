@@ -144,7 +144,6 @@
     <ClCompile Include="..\..\Source\LevelMeter.cpp"/>
     <ClCompile Include="..\..\Source\DiscArt.cpp"/>
     <ClCompile Include="..\..\Source\PlaylistComponent.cpp"/>
-    <ClCompile Include="..\..\Source\AlbumCover.cpp"/>
     <ClCompile Include="..\..\Source\WaveformDisplay.cpp"/>
     <ClCompile Include="..\..\Source\Header.cpp"/>
     <ClCompile Include="..\..\Source\DeckGUI.cpp"/>
@@ -2481,7 +2480,6 @@
     <ClInclude Include="..\..\Source\LevelMeter.h"/>
     <ClInclude Include="..\..\Source\DiscArt.h"/>
     <ClInclude Include="..\..\Source\PlaylistComponent.h"/>
-    <ClInclude Include="..\..\Source\AlbumCover.h"/>
     <ClInclude Include="..\..\Source\Header.h"/>
     <ClInclude Include="..\..\Source\WaveformDisplay.h"/>
     <ClInclude Include="..\..\Source\DeckGUI.h"/>

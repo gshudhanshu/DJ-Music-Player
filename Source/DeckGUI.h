@@ -14,6 +14,7 @@
 #include "DJAudioPlayer.h"
 #include "WaveformDisplay.h"
 #include "LevelMeter.h"
+#include "DiscArt.h"
 
 //==============================================================================
 /*
@@ -25,7 +26,7 @@ class DeckGUI    : public Component,
                    public Timer
 {
 public:
-    DeckGUI(DJAudioPlayer* player,
+    DeckGUI(DJAudioPlayer* player, String* side,
             juce::AudioFormatManager & formatManagerToUse,
             juce::AudioThumbnailCache & cacheToUse);
     ~DeckGUI();
@@ -55,6 +56,7 @@ private:
     DrawableButton forwardButton{ "FORWARD", DrawableButton::ButtonStyle::ImageOnButtonBackground };
     DrawableButton backwardButton{ "BACKWARD",DrawableButton::ButtonStyle::ImageOnButtonBackground };
     TextButton loadButton{ "LOAD" };
+    TextButton sideButton;
 
 
     Slider volSlider; 
@@ -71,7 +73,10 @@ private:
 
     FileChooser fChooser{"Select a file..."};
 
+    DiscArt discArt;
     DJAudioPlayer* player;
+    String* side;
+
     WaveformDisplay waveformDisplay;
 
     LevelMeter levelMeterL;

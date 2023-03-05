@@ -24,8 +24,6 @@
             file="Source/PlaylistComponent.cpp"/>
       <FILE id="hY42Yf" name="PlaylistComponent.h" compile="0" resource="0"
             file="Source/PlaylistComponent.h"/>
-      <FILE id="LuAugT" name="AlbumCover.cpp" compile="1" resource="0" file="Source/AlbumCover.cpp"/>
-      <FILE id="wjYWWy" name="AlbumCover.h" compile="0" resource="0" file="Source/AlbumCover.h"/>
       <FILE id="MZMhdF" name="WaveformDisplay.cpp" compile="1" resource="0"
             file="Source/WaveformDisplay.cpp"/>
       <FILE id="zs7RHX" name="Header.cpp" compile="1" resource="0" file="Source/Header.cpp"/>

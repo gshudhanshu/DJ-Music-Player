@@ -47,10 +47,12 @@ private:
     Header header;
 
     DJAudioPlayer player1{formatManager};
-    DeckGUI deckGUI1{&player1,  formatManager, thumbCache };
+    String left = "A";
+    DeckGUI deckGUI1{&player1, &left, formatManager, thumbCache };
 
+    String right = "B";
     DJAudioPlayer player2{formatManager};
-    DeckGUI deckGUI2{&player2, formatManager, thumbCache};
+    DeckGUI deckGUI2{&player2, &right, formatManager, thumbCache};
 
     PlaylistComponent playlistComponent{ &deckGUI1, &deckGUI2 };
 
