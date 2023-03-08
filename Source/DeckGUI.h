@@ -40,6 +40,8 @@ public:
     /** implement Slider::Listener */
     void sliderValueChanged (Slider *slider) override;
 
+    void mouseDown(const MouseEvent& event) override;
+
     bool isInterestedInFileDrag (const StringArray &files) override;
     void filesDropped (const StringArray &files, int x, int y) override; 
 

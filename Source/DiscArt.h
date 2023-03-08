@@ -29,11 +29,10 @@ public:
     void setRotationSpeed(float newSpeed);
 
 private:
-    Colour mDiscColour = Colours::blue;
-    float mCenterX = 0.0f;
-    float mCenterY = 0.0f;
-    float mRotationAngle = 0.0f;
-    float mRotationSpeed = 0.01f; // Default rotation speed
+    //float mCenterX = 0.0f;
+    //float mCenterY = 0.0f;
+    float rotationAngle = 0.0f;
+    float rotationSpeed = 0.0f; // Default rotation speed
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DiscArt)
 };

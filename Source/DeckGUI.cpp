@@ -28,7 +28,6 @@ DeckGUI::DeckGUI(DJAudioPlayer* _player, String* _side,
 
 	sideButton.setButtonText(*side);
 
-
 	playButton.setImages(playSvg.get());
 	stopButton.setImages(stopSvg.get());
 	pauseButton.setImages(pauseSvg.get());
@@ -90,6 +89,8 @@ DeckGUI::DeckGUI(DJAudioPlayer* _player, String* _side,
 	addAndMakeVisible(trackTitleTxt);
 	addAndMakeVisible(trackDurationTxt);
 
+	waveformDisplay.addMouseListener(this, false);
+
 	playButton.addListener(this);
 	stopButton.addListener(this);
 	pauseButton.addListener(this);
@@ -129,8 +130,8 @@ void DeckGUI::paint(Graphics& g)
 
 	g.setColour(Colours::white);
 	g.setFont(14.0f);
-	g.drawText("DeckGUI", getLocalBounds(),
-		Justification::centred, true);   // draw some placeholder text
+	//g.drawText("DeckGUI", getLocalBounds(),
+		//Justification::centred, true);   // draw some placeholder text
 }
 
 void DeckGUI::resized()
@@ -209,17 +210,20 @@ void DeckGUI::buttonClicked(Button* button)
 	{
 		std::cout << "Play button was clicked " << std::endl;
 		player->start();
+		discArt.setRotationSpeed(1);
 	}
 	if (button == &stopButton)
 	{
 		std::cout << "Stop button was clicked " << std::endl;
 		player->stop();
+		discArt.setRotationSpeed(0);
 	}
 
 	if (button == &pauseButton)
 	{
 		std::cout << "Stop button was clicked " << std::endl;
 		player->pause();
+		discArt.setRotationSpeed(0);
 	}	if (button == &backwardButton)
 	{
 		std::cout << "Stop button was clicked " << std::endl;
@@ -243,18 +247,8 @@ void DeckGUI::buttonClicked(Button* button)
 		// and now the waveformDisplay as well
 		waveformDisplay.loadURL(URL{ chooser.getResult() });
 			});
+		discArt.setRotationSpeed(0);
 	}
-	// if (button == &loadButton)
-	// {
-	//     FileChooser chooser{"Select a file..."};
-	//     if (chooser.browseForFileToOpen())
-	//     {
-	//         player->loadURL(URL{chooser.getResult()});
-	//         waveformDisplay.loadURL(URL{chooser.getResult()});
-
-	//     }
-
-	// }
 }
 
 void DeckGUI::sliderValueChanged(Slider* slider)
@@ -275,13 +269,22 @@ void DeckGUI::sliderValueChanged(Slider* slider)
 	if (slider == &speedSlider)
 	{
 		player->setSpeed(slider->getValue());
+		if(player->isPlaying()){
+			discArt.setRotationSpeed(slider->getValue());
+		}
 	}
 
-	if (slider == &posSlider)
-	{
-		player->setPositionRelative(slider->getValue());
-	}
 }
+
+void DeckGUI::mouseDown(const MouseEvent& event)
+{
+	if (event.eventComponent == &waveformDisplay) {
+		float pos = static_cast<float>(event.getMouseDownX()) / waveformDisplay.getWidth();
+		player->setPositionRelative(pos);
+	}
+
+}
+
 
 bool DeckGUI::isInterestedInFileDrag(const StringArray& files)
 {
@@ -304,7 +307,13 @@ void DeckGUI::loadTrackToDeck(File file)
 	waveformDisplay.loadURL(URL{ file });
 	trackTitleTxt.setText(player->getTrackDetails()[0]);
 	trackDurationTxt.setText(player->getTrackDetails()[1]);
+	player->start();
+
+	if (player->isPlaying()) {
+		discArt.setRotationSpeed(speedSlider.getValue());
+	}
 }
+
 
 void DeckGUI::timerCallback()
 {

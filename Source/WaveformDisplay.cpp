@@ -101,9 +101,12 @@ void WaveformDisplay::setPositionRelative(double pos)
   {
     position = pos;
     repaint();
-  }
+  }  
+}
 
-  
+float WaveformDisplay::getMousePosition()
+{
+    return getMouseXYRelative().getX()/getWidth();
 }
 
 

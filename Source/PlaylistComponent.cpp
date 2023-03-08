@@ -247,7 +247,7 @@ void PlaylistComponent::importTracksToPlaylist()
 		auto file = chooser.getResults();
 	playlistArr.addArray(file);
 	tableComponent.updateContent();
-		}
+	}
 	);
 }
 

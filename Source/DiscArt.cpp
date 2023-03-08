@@ -14,8 +14,6 @@
 //==============================================================================
 DiscArt::DiscArt()
 {
-    mDiscColour = Colours::blue;
-    mRotationAngle = 0.0f;
     startTimerHz(60);
 }
 
@@ -25,38 +23,114 @@ DiscArt::~DiscArt()
 
 void DiscArt::paint (juce::Graphics& g)
 {
-    g.fillAll(Colours::white); // Fill the background with white
-    //g.setGradientFill(ColourGradient(mDiscColour.darker(), mDiscColour.brighter(), getLocalBounds().getCentre().toFloat(), mDiscColour, true)); // Set the gradient fill of the disc
-    g.fillEllipse(getLocalBounds().toFloat()); // Draw the disc
-    g.setColour(Colours::black); // Set the color of the border
-    //g.setThickness(3.0f); // Set the thickness of the border
-    g.drawEllipse(getLocalBounds().toFloat(), 3.0f); // Draw the border
+    //const float centerX = getWidth() / 2.0f;
+    //const float centerY = getHeight() / 2.0f;
+    //const float radius = jmin(centerX, centerY) - 10.0f;
+    //const int numSlices = 30;
+    //const float sliceAngle = MathConstants<float>::twoPi / numSlices;
+    //const float sliceWidth = 2.0f * MathConstants<float>::pi * radius / numSlices;
+    ////const float rotationAngle = static_cast<float>(time) * 50.0f; // Rotate by 50 degrees per second
+
+    //// Draw the slices of the music disk
+    //Path slicePath;
+    //for (int i = 0; i < numSlices; ++i)
+    //{
+    //    const float startAngle = i * sliceAngle;
+    //    const float endAngle = (i + 1) * sliceAngle;
+    //    const Colour sliceColour = Colour::fromHSV(static_cast<float>(i) / numSlices, 1.0f, 1.0f, 1.0f);
+    //    slicePath.clear();
+    //    slicePath.startNewSubPath(centerX, centerY);
+    //    slicePath.addPieSegment(centerX - radius, centerY - radius, 2.0f * radius, 2.0f * radius, startAngle, endAngle, 0.0f);
+    //    g.setColour(sliceColour);
+    //    g.saveState();
+    //    g.addTransform(AffineTransform::rotation(rotationAngle, centerX, centerY));
+    //    g.fillPath(slicePath);
+    //    g.restoreState();
+    //}
+
+    //// Draw the center hole of the music disk
+    //const float holeRadius = radius / 5.0f;
+    //const Colour holeColour = Colours::black;
+    //g.setColour(holeColour);
+    //g.fillEllipse(centerX - holeRadius, centerY - holeRadius, 2.0f * holeRadius, 2.0f * holeRadius);
+
+    //========
+
+    const float centerX = getWidth() / 2.0f;
+    const float centerY = getHeight() / 2.0f;
+    const float radius = jmin(centerX, centerY) - 10.0f;
+    const int numSlices = 30;
+    const float sliceAngle = MathConstants<float>::twoPi / numSlices;
+    const float sliceWidth = 2.0f * MathConstants<float>::pi * radius / numSlices;
+
+    // Add a glow effect to the music disk
+    const float glowRadius = radius * 1.5f;
+    const Colour glowColour = Colours::white.withAlpha(0.2f);
+    const int numGlowCircles = 10;
+    const float glowCircleSpacing = glowRadius / numGlowCircles;
+    g.setColour(glowColour);
+    g.saveState();
+    g.addTransform(AffineTransform::rotation(rotationAngle, centerX, centerY));
+    for (int i = 1; i <= numGlowCircles; ++i)
+    {
+        const float circleRadius = i * glowCircleSpacing;
+        const float circleAlpha = 0.8f - 0.6f * static_cast<float>(i) / numGlowCircles;
+        const Colour circleColour = glowColour.withAlpha(circleAlpha);
+        g.setColour(circleColour);
+        g.drawEllipse(centerX - circleRadius, centerY - circleRadius, 2.0f * circleRadius, 2.0f * circleRadius, 1.0f);
+    }
+    g.restoreState();
+
+	// Draw the slices of the music disk
+    Path slicePath;
+    for (int i = 0; i < numSlices; ++i)
+    {
+        const float startAngle = i * sliceAngle;
+        const float endAngle = (i + 1) * sliceAngle;
+        const Colour sliceColour = Colour::fromHSV(static_cast<float>(i) / numSlices, 1.0f, 1.0f, 1.0f);
+        slicePath.clear();
+        slicePath.startNewSubPath(centerX, centerY);
+        slicePath.addPieSegment(centerX - radius, centerY - radius, 2.0f * radius, 2.0f * radius, startAngle, endAngle, 0.0f);
+        g.setColour(sliceColour);
+        g.saveState();
+        g.addTransform(AffineTransform::rotation(rotationAngle, centerX, centerY));
+        g.fillPath(slicePath);
+        g.restoreState();
+    }
+
+    // Draw the center hole of the music disk
+    const float holeRadius = radius / 5.0f;
+    const Colour holeColour = Colours::black;
+    g.setColour(holeColour);
+    g.fillEllipse(centerX - holeRadius, centerY - holeRadius, 2.0f * holeRadius, 2.0f * holeRadius);
+
 
 }
 
 void DiscArt::resized()
 {
     // Set the center point of the disc to the center of the component
-    mCenterX = getWidth() / 2.0f;
-    mCenterY = getHeight() / 2.0f;
+    //mCenterX = getWidth() / 2.0f;
+    //mCenterY = getHeight() / 2.0f;
 
 }
 
 void DiscArt::timerCallback()
 {
-//    mRotationAngle += 0.5f;
-//    if (mRotationAngle >= 360.0f)
-//        mRotationAngle = 0.0f;
-//    setTransform(AffineTransform::rotation(mRotationAngle * MathConstants<float>::pi / 180.0f, getWidth() / 2.0f, getHeight() / 2.0f));
+    rotationAngle += rotationSpeed;
+    if (rotationAngle >= 360.0f)
+        rotationAngle = 0.0f;
+
+    repaint();
 }
 
 
-void DiscArt::setDiscColour(Colour newColour)
-{
-    mDiscColour = newColour;
-}
+//void DiscArt::setDiscColour(Colour newColour)
+//{
+//    mDiscColour = newColour;
+//}
 
-void DiscArt::setRotationSpeed(float newSpeed)
+void DiscArt::setRotationSpeed(float factor)
 {
-    mRotationSpeed = newSpeed;
+    rotationSpeed = 0.05*factor;
 }

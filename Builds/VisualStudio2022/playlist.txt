@@ -1,8 +1,19 @@
-G:\UoL\Object-Oriented Programming\Final project\OtoDecks\tracks\Baby Mere Birthday Pe Goli Chalegi_192(PagalWorld.com.se).mp3
-G:\UoL\Object-Oriented Programming\Final project\OtoDecks\tracks\Tu Aake Dekhle Mashup Remix - DJ Shadow Dubai.mp3
-G:\UoL\Object-Oriented Programming\Final project\OtoDecks\tracks\electro_smash.mp3
-G:\UoL\Object-Oriented Programming\Final project\OtoDecks\tracks\twindrive.mp3
+G:\UoL\Object-Oriented Programming\Final project\OtoDecks\tracks\01-180813_1305.mp3
 G:\UoL\Object-Oriented Programming\Final project\OtoDecks\tracks\aon_inspired.mp3
+G:\UoL\Object-Oriented Programming\Final project\OtoDecks\tracks\Baby Mere Birthday Pe Goli Chalegi_192(PagalWorld.com.se).mp3
 G:\UoL\Object-Oriented Programming\Final project\OtoDecks\tracks\bad_frog.mp3
 G:\UoL\Object-Oriented Programming\Final project\OtoDecks\tracks\bleep_2.mp3
+G:\UoL\Object-Oriented Programming\Final project\OtoDecks\tracks\bleep_10.mp3
 G:\UoL\Object-Oriented Programming\Final project\OtoDecks\tracks\c_major_theme.mp3
+G:\UoL\Object-Oriented Programming\Final project\OtoDecks\tracks\electro_smash.mp3
+G:\UoL\Object-Oriented Programming\Final project\OtoDecks\tracks\fast_melody_regular_drums.mp3
+G:\UoL\Object-Oriented Programming\Final project\OtoDecks\tracks\fast_melody_thing.mp3
+G:\UoL\Object-Oriented Programming\Final project\OtoDecks\tracks\hard.mp3
+G:\UoL\Object-Oriented Programming\Final project\OtoDecks\tracks\ms20_improvisation.mp3
+G:\UoL\Object-Oriented Programming\Final project\OtoDecks\tracks\Rihanna_Lift_Me_Up_From_Black_Panther_Wakanda_.mp3
+G:\UoL\Object-Oriented Programming\Final project\OtoDecks\tracks\selection1.mp3
+G:\UoL\Object-Oriented Programming\Final project\OtoDecks\tracks\soft.mp3
+G:\UoL\Object-Oriented Programming\Final project\OtoDecks\tracks\stomper_reggae_bit.mp3
+G:\UoL\Object-Oriented Programming\Final project\OtoDecks\tracks\stomper1.mp3
+G:\UoL\Object-Oriented Programming\Final project\OtoDecks\tracks\Tu Aake Dekhle Mashup Remix - DJ Shadow Dubai.mp3
+G:\UoL\Object-Oriented Programming\Final project\OtoDecks\tracks\twindrive.mp3

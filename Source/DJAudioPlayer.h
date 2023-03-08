@@ -47,6 +47,8 @@ class DJAudioPlayer : public AudioSource
     double getPositionRelative();
     Array <String> getTrackDetails();
 
+    bool isPlaying();
+
 private:
 
     AudioFormatReader* reader;
@@ -62,7 +64,6 @@ private:
     IIRFilterAudioSource bassSource{ &resampleSource, false };
     IIRFilterAudioSource trebleSource{ &bassSource, false };
     IIRFilterAudioSource filteredResampleSource{ &trebleSource, false };
-
 
     String trackTitle;
     int trackSeconds;

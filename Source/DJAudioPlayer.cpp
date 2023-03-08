@@ -33,6 +33,7 @@ void DJAudioPlayer::prepareToPlay(int samplesPerBlockExpected, double sampleRate
 	bassSource.setCoefficients(juce::IIRCoefficients::makeLowShelf(sampleRate, bassCutOffFreq, 1, 1));
 	trebleSource.setCoefficients(juce::IIRCoefficients::makeHighShelf(sampleRate, trebleCutOffFreq, 1, 1));
 	filteredResampleSource.setCoefficients(juce::IIRCoefficients::makeAllPass(sampleRate, 200));
+	
 }
 void DJAudioPlayer::getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill)
 {
@@ -41,7 +42,6 @@ void DJAudioPlayer::getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill
 	if (reader != nullptr)
 	{
 		AudioBuffer<float> buffer(2, bufferToFill.numSamples); // create new buffer for channel data
-
 
 		buffer.copyFrom(0, 0, bufferToFill.buffer->getReadPointer(0), bufferToFill.numSamples);
 		buffer.copyFrom(1, 0, bufferToFill.buffer->getReadPointer(1), bufferToFill.numSamples);
@@ -203,11 +203,12 @@ void DJAudioPlayer::loop()
 {
 	if (transportSource.isLooping())
 	{
-		transportSource.setLooping(false);
+		
+		readerSource->setLooping(false);
 	}
 	else
 	{
-		transportSource.setLooping(true);
+		readerSource->setLooping(true);
 	}
 }
 
@@ -242,4 +243,9 @@ Array <String> DJAudioPlayer::getTrackDetails()
 Array <float> DJAudioPlayer::getDecible()
 {
 	return { leftDB, rightDB };
+}
+
+bool DJAudioPlayer::isPlaying()
+{
+		return transportSource.isPlaying();
 }
