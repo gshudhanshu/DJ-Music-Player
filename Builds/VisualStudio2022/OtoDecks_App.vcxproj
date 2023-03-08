@@ -141,6 +141,7 @@
     <Lib/>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\MyLookAndFeel.cpp"/>
     <ClCompile Include="..\..\Source\LevelMeter.cpp"/>
     <ClCompile Include="..\..\Source\DiscArt.cpp"/>
     <ClCompile Include="..\..\Source\PlaylistComponent.cpp"/>
@@ -2477,6 +2478,7 @@
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_opengl.cpp"/>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\MyLookAndFeel.h"/>
     <ClInclude Include="..\..\Source\LevelMeter.h"/>
     <ClInclude Include="..\..\Source\DiscArt.h"/>
     <ClInclude Include="..\..\Source\PlaylistComponent.h"/>

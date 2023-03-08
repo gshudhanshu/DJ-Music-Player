@@ -85,11 +85,10 @@ void MainComponent::paint(Graphics& g)
 
 void MainComponent::resized()
 {
-	const int headerHeight = getHeight() / 10;
 
 	juce::FlexBox mainFlexBox;
 	mainFlexBox.flexDirection = juce::FlexBox::Direction::column;
-	mainFlexBox.items.add(juce::FlexItem(header).withFlex(1));
+	mainFlexBox.items.add(juce::FlexItem(header).withFlex(0.7));
 
 	juce::FlexBox decks;
 	decks.flexDirection = juce::FlexBox::Direction::row;

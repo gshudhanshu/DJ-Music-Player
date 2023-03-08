@@ -17,8 +17,9 @@ PlaylistComponent::PlaylistComponent(
 	DeckGUI* _deckGUI1,
 	DeckGUI* _deckGUI2) : deckGUI1(_deckGUI1), deckGUI2(_deckGUI2)
 {
-	// In your constructor, you should add any child components, and
-	// initialise any special settings that your component needs.
+	// Import svg button SVGs
+	playSvg = Drawable::createFromImageData(BinaryData::play_solid_svg, BinaryData::play_solid_svgSize);
+	deleteSvg = Drawable::createFromImageData(BinaryData::trash_solid_svg, BinaryData::trash_solid_svgSize);
 
 	String dir = File::getCurrentWorkingDirectory().getChildFile("playlist.txt").getFullPathName();
 	autoImportDefaultPlaylist(dir );
@@ -132,6 +133,25 @@ void PlaylistComponent::paintCell(Graphics& g, int rowNumber, int columnId, int 
 		tracksArr = playlistArr;
 	}
 
+	if (columnId == 1) {
+		DrawableButton* loadDeck1Btn = new DrawableButton{ "LOAD_DECK_1", DrawableButton::ButtonStyle::ImageOnButtonBackground };
+		loadDeck1Btn->setImages(playSvg.get());
+		loadDeck1Btn->addListener(this);
+		int index = playlistArrIndex[rowNumber];
+		String id = String(index);
+		loadDeck1Btn->setComponentID(id);
+	}
+
+	if (columnId == 2)
+	{
+		DrawableButton* loadDeck2Btn = new DrawableButton{ "LOAD_DECK_2", DrawableButton::ButtonStyle::ImageOnButtonBackground };
+		loadDeck2Btn->setImages(playSvg.get());
+		loadDeck2Btn->addListener(this);
+		int index = playlistArrIndex[rowNumber];
+		String id = String(index);
+		loadDeck2Btn->setComponentID(id);
+	}
+
 	if (columnId == 3)
 	{
 		g.drawText(tracksArr[rowNumber].getFileName(), 0, 0, width, height, Justification::centredLeft);
@@ -161,14 +181,22 @@ void PlaylistComponent::paintCell(Graphics& g, int rowNumber, int columnId, int 
 			String time = convertSecTohhmmssFormat(seconds);
 			g.drawText(time, 0, 0, width, height, Justification::centredLeft);
 		}
+
+	}
+
+	if (columnId == 6)
+	{
+		DrawableButton* deleteTrackBtn = new DrawableButton{ "DELETE_TRACK", DrawableButton::ButtonStyle::ImageOnButtonBackground };
+		deleteTrackBtn->setImages(deleteSvg.get());
+		deleteTrackBtn->addListener(this);
+		int index = playlistArrIndex[rowNumber];
+		String id = String(index);
+		deleteTrackBtn->setComponentID(id);
 	}
 }
 
 Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnId, bool isRowSelected, Component* existingComponentToUpdate)
 {
-	// Import svg button SVGs
-	auto playSvg = Drawable::createFromImageData(BinaryData::play_solid_svg, BinaryData::play_solid_svgSize);
-	auto deleteSvg = Drawable::createFromImageData(BinaryData::trash_solid_svg, BinaryData::trash_solid_svgSize);
 	//existingComponentToUpdate == nullptr;
 	if (existingComponentToUpdate == nullptr)
 	{
@@ -201,12 +229,13 @@ Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnI
 			deleteTrackBtn->setComponentID(id);
 			existingComponentToUpdate = deleteTrackBtn;
 		}
+		return existingComponentToUpdate;
 	}
-	else
-	{
-		existingComponentToUpdate->setComponentID(String(rowNumber));
-	}
-	return existingComponentToUpdate;
+		if(searchInput.isEmpty()){
+			existingComponentToUpdate->setComponentID(String(rowNumber));
+			return existingComponentToUpdate;
+		}
+	return nullptr;
 }
 
 void PlaylistComponent::deleteTrackFromPlaylist(int id)
@@ -370,20 +399,49 @@ void PlaylistComponent::clearPlaylist()
 
 void PlaylistComponent::searchTrackInPlaylist(String textString)
 {
-	if (textString.isNotEmpty())
+	//if (textString.isNotEmpty())
+	//{
+	//	filteredPlaylistArr.clear();
+	//	for (int i = 0; i < playlistArr.size(); ++i)
+	//	{
+	//		if (playlistArr[i].getFileName().containsIgnoreCase(textString))
+	//		{
+	//			filteredPlaylistArr.add(playlistArr[i]);
+	//			playlistArrIndex.add(i);
+	//			//DBG(i);
+	//		}
+	//	}
+	//}
+	//tableComponent.updateContent();
+
+		// Clear the filtered playlist array
+	filteredPlaylistArr.clear();
+
+	// Iterate through the playlist array and add the matching tracks to the filtered playlist array
+	for (int i = 0; i < playlistArr.size(); i++)
 	{
-		filteredPlaylistArr.clear();
-		for (int i = 0; i < playlistArr.size(); ++i)
+		if (playlistArr[i].getFileNameWithoutExtension().containsIgnoreCase(textString))
 		{
-			if (playlistArr[i].getFileName().containsIgnoreCase(textString))
-			{
-				filteredPlaylistArr.add(playlistArr[i]);
-				playlistArrIndex.add(i);
-				//DBG(i);
-			}
+			filteredPlaylistArr.add(playlistArr[i]);
 		}
 	}
+
+	// Update the playlistArrIndex to reflect the new indices of the filtered tracks
+	playlistArrIndex.clear();
+	for (int i = 0; i < filteredPlaylistArr.size(); i++)
+	{
+		int index = playlistArr.indexOf(filteredPlaylistArr[i]);
+		if (index != -1)
+		{
+			playlistArrIndex.add(index);
+		}
+	}
+
+	// Update the table to display the filtered playlist
 	tableComponent.updateContent();
+	tableComponent.repaint();
+	//tableComponent.selectRow(0);
+
 }
 
 void PlaylistComponent::buttonClicked(Button* button)

@@ -39,7 +39,7 @@ void Header::paint (juce::Graphics& g)
 
     g.setColour (juce::Colours::white);
     g.setFont(Font( 25.0f, Font::bold));
-    g.drawText ("DJ EZEE", -10, 0, getWidth() / 2, getHeight(),
+    g.drawText ("EZEE Player", -10, 0, getWidth() / 2, getHeight(),
                 juce::Justification::right, true); 
     g.setFont(Font(14.0f, Font::plain));
     g.drawText("Simple DJ app", (getWidth() / 2)+10, 0, getWidth() / 2, getHeight(),

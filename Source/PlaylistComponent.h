@@ -44,6 +44,8 @@ private:
 
 	AudioFormatManager formatManager;
 
+	std::unique_ptr <Drawable> playSvg, deleteSvg;
+
 	// Playlist table
 	TableListBox tableComponent;
 	Array <juce::File> playlistArr;
