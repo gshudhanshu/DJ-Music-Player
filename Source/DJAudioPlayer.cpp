@@ -249,3 +249,15 @@ bool DJAudioPlayer::isPlaying()
 {
 		return transportSource.isPlaying();
 }
+
+
+
+void DJAudioPlayer::setPlayerColour(Colour colour)
+{
+	playerColor = colour;
+}
+
+Colour DJAudioPlayer::getPlayerColour()
+{
+	return playerColor;
+}

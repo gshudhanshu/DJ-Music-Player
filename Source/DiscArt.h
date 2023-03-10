@@ -11,6 +11,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "DJAudioPlayer.h"
 
 //==============================================================================
 /*
@@ -18,7 +19,7 @@
 class DiscArt  : public juce::Component, public juce::Timer
 {
 public:
-    DiscArt();
+    DiscArt(DJAudioPlayer* player);
     ~DiscArt() override;
 
     void paint (juce::Graphics&) override;
@@ -31,6 +32,10 @@ public:
 private:
     //float mCenterX = 0.0f;
     //float mCenterY = 0.0f;
+
+    DJAudioPlayer* player;
+    Colour primaryColor;
+
     float rotationAngle = 0.0f;
     float rotationSpeed = 0.0f; // Default rotation speed
 

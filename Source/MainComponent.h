@@ -13,6 +13,7 @@
 #include "DeckGUI.h"
 #include "Header.h"
 #include "PlaylistComponent.h"
+#include "MyLookAndFeel.h"
 
 
 //==============================================================================
@@ -36,9 +37,14 @@ public:
     void paint (Graphics& g) override;
     void resized() override;
 
+
 private:
     //==============================================================================
     // Your private member variables go here...
+
+    MyTextButtonLookAndFeel myTextButtonLookAndFeel;
+    MyResizableWindowLookAndFeel myResizableWindowLookAndFeel;
+
 
     AudioFormatManager formatManager;
 
@@ -47,6 +53,7 @@ private:
     Header header;
 
     DJAudioPlayer player1{formatManager};
+
     String left = "A";
     DeckGUI deckGUI1{&player1, &left, formatManager, thumbCache };
 

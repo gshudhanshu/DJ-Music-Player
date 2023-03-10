@@ -6,8 +6,13 @@
     <GROUP id="{64501669-069E-47DB-567D-39D4E465E138}" name="Assets">
       <FILE id="JXNiJS" name="backward_solid.svg" compile="0" resource="1"
             file="Assets/backward_solid.svg"/>
+      <FILE id="YebhRM" name="cyan_knob.png" compile="0" resource="1" file="Assets/cyan_knob.png"/>
+      <FILE id="pQlM3Z" name="cyan_slider.png" compile="0" resource="1" file="Assets/cyan_slider.png"/>
       <FILE id="hivvib" name="forward_solid.svg" compile="0" resource="1"
             file="Assets/forward_solid.svg"/>
+      <FILE id="t7Y8YR" name="orange_knob.png" compile="0" resource="1" file="Assets/orange_knob.png"/>
+      <FILE id="OygWpA" name="orange_slider.png" compile="0" resource="1"
+            file="Assets/orange_slider.png"/>
       <FILE id="Fo51sa" name="pause_solid.svg" compile="0" resource="1" file="Assets/pause_solid.svg"/>
       <FILE id="L3xETk" name="play_solid.svg" compile="0" resource="1" file="Assets/play_solid.svg"/>
       <FILE id="G5b5f8" name="repeat_solid.svg" compile="0" resource="1"

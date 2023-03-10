@@ -3088,6 +3088,9 @@
     <ClCompile Include="..\..\JuceLibraryCode\BinaryData.cpp">
       <Filter>JUCE Library Code</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\JuceLibraryCode\BinaryData2.cpp">
+      <Filter>JUCE Library Code</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_audio_basics.cpp">
       <Filter>JUCE Library Code</Filter>
     </ClCompile>
@@ -6086,7 +6089,19 @@
     <None Include="..\..\Assets\backward_solid.svg">
       <Filter>OtoDecks\Assets</Filter>
     </None>
+    <None Include="..\..\Assets\cyan_knob.png">
+      <Filter>OtoDecks\Assets</Filter>
+    </None>
+    <None Include="..\..\Assets\cyan_slider.png">
+      <Filter>OtoDecks\Assets</Filter>
+    </None>
     <None Include="..\..\Assets\forward_solid.svg">
+      <Filter>OtoDecks\Assets</Filter>
+    </None>
+    <None Include="..\..\Assets\orange_knob.png">
+      <Filter>OtoDecks\Assets</Filter>
+    </None>
+    <None Include="..\..\Assets\orange_slider.png">
       <Filter>OtoDecks\Assets</Filter>
     </None>
     <None Include="..\..\Assets\pause_solid.svg">

@@ -40,11 +40,12 @@ private:
 
     int channel;
 
+    juce::Colour barColour;
+
     float decibles;
     float targetValue;
     float maxBarHeight;
     float barWidth;
-    juce::Colour barColour;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LevelMeter)
 };

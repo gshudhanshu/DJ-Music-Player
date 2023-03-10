@@ -49,6 +49,10 @@ class DJAudioPlayer : public AudioSource
 
     bool isPlaying();
 
+    void setPlayerColour(Colour colour);
+    Colour getPlayerColour();
+
+
 private:
 
     AudioFormatReader* reader;
@@ -68,8 +72,10 @@ private:
     String trackTitle;
     int trackSeconds;
 
+    Colour playerColor;
     float leftDB;
     float rightDB;
+
 };
 
 

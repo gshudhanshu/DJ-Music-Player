@@ -15,9 +15,13 @@
 DeckGUI::DeckGUI(DJAudioPlayer* _player, String* _side,
 	juce::AudioFormatManager& formatManagerToUse,
 	juce::AudioThumbnailCache& cacheToUse)
-	: player(_player), side(_side), waveformDisplay(formatManagerToUse, cacheToUse), levelMeterL(_player), levelMeterR(_player)
+	: player(_player), side(_side), waveformDisplay(formatManagerToUse, cacheToUse),
+      levelMeterL(_player), levelMeterR(_player),
+      discArt(_player)
 
 {
+
+
 	// Import svg button SVGs
 	auto playSvg = Drawable::createFromImageData(BinaryData::play_solid_svg, BinaryData::play_solid_svgSize);
 	auto backwardSvg = Drawable::createFromImageData(BinaryData::backward_solid_svg, BinaryData::backward_solid_svgSize);
@@ -27,6 +31,7 @@ DeckGUI::DeckGUI(DJAudioPlayer* _player, String* _side,
 	auto loopSvg = Drawable::createFromImageData(BinaryData::repeat_solid_svg, BinaryData::repeat_solid_svgSize);
 
 	sideButton.setButtonText(*side);
+
 
 	playButton.setImages(playSvg.get());
 	stopButton.setImages(stopSvg.get());
@@ -39,21 +44,29 @@ DeckGUI::DeckGUI(DJAudioPlayer* _player, String* _side,
 	highPassSlider.setRange(0.1, 2.0);
 	highPassSlider.setValue(1.0);
 	highPassSlider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+	highPassSlider.setLookAndFeel(&myRotarySliderLookAndFeel);
+
 
 	lowPassSlider.setSliderStyle(juce::Slider::Rotary);
 	lowPassSlider.setRange(0.1, 2.0);
 	lowPassSlider.setValue(1.0);
 	lowPassSlider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+	lowPassSlider.setLookAndFeel(&myRotarySliderLookAndFeel);
+
 
 	speedSlider.setSliderStyle(juce::Slider::Rotary);
 	speedSlider.setRange(0.0, 5.0);
 	speedSlider.setValue(1.0);
 	speedSlider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+	speedSlider.setLookAndFeel(&myRotarySliderLookAndFeel);
+
 
 	volSlider.setSliderStyle(juce::Slider::LinearVertical);
 	volSlider.setRange(0.0, 1.0);
 	volSlider.setValue(1.0);
 	volSlider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+	volSlider.setLookAndFeel(&mySliderLookAndFeel);
+
 
 	levelMeterL.setChannel(0);
 	levelMeterR.setChannel(1);
@@ -322,13 +335,3 @@ void DeckGUI::timerCallback()
 	levelMeterL.setValue(player->getDecible()[0]);
 	levelMeterR.setValue(player->getDecible()[1]);
 }
-
-//void DeckGUI::setTrackDetails(String title, int seconds)
-//{
-//    trackTitleTxt.setText(title);
-//    int hr = (seconds / 3600);
-//    int min = (seconds / 60) % 60;
-//    int sec = (seconds % 60);
-//    String time = String(hr) + ":" + String(min) + ":" + String(sec);
-//    trackTitleTxt.setText(time);
-//}

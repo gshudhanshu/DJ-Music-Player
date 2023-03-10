@@ -15,6 +15,7 @@
 #include "WaveformDisplay.h"
 #include "LevelMeter.h"
 #include "DiscArt.h"
+#include "MyLookAndFeel.h"
 
 //==============================================================================
 /*
@@ -50,6 +51,7 @@ public:
 
 private:
 
+
     // Player buttons
     DrawableButton playButton{"PLAY", DrawableButton::ButtonStyle::ImageOnButtonBackground };
     DrawableButton pauseButton{ "PAUSE", DrawableButton::ButtonStyle::ImageOnButtonBackground };
@@ -75,9 +77,12 @@ private:
 
     FileChooser fChooser{"Select a file..."};
 
-    DiscArt discArt;
     DJAudioPlayer* player;
     String* side;
+    DiscArt discArt;
+
+    MyRotarySliderLookAndFeel myRotarySliderLookAndFeel{side};
+    MySliderLookAndFeel mySliderLookAndFeel{side};
 
     WaveformDisplay waveformDisplay;
 

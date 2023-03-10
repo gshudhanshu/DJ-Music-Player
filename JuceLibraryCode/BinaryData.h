@@ -9,28 +9,40 @@
 namespace BinaryData
 {
     extern const char*   backward_solid_svg;
-    const int            backward_solid_svgSize = 553;
+    const int            backward_solid_svgSize = 756;
+
+    extern const char*   cyan_knob_png;
+    const int            cyan_knob_pngSize = 2577006;
+
+    extern const char*   cyan_slider_png;
+    const int            cyan_slider_pngSize = 5572;
 
     extern const char*   forward_solid_svg;
-    const int            forward_solid_svgSize = 553;
+    const int            forward_solid_svgSize = 755;
+
+    extern const char*   orange_knob_png;
+    const int            orange_knob_pngSize = 2616653;
+
+    extern const char*   orange_slider_png;
+    const int            orange_slider_pngSize = 4136;
 
     extern const char*   pause_solid_svg;
-    const int            pause_solid_svgSize = 460;
+    const int            pause_solid_svgSize = 661;
 
     extern const char*   play_solid_svg;
-    const int            play_solid_svgSize = 394;
+    const int            play_solid_svgSize = 593;
 
     extern const char*   repeat_solid_svg;
-    const int            repeat_solid_svgSize = 705;
+    const int            repeat_solid_svgSize = 919;
 
     extern const char*   stop_solid_svg;
-    const int            stop_solid_svgSize = 355;
+    const int            stop_solid_svgSize = 554;
 
     extern const char*   trash_solid_svg;
-    const int            trash_solid_svgSize = 502;
+    const int            trash_solid_svgSize = 707;
 
     // Number of elements in the namedResourceList and originalFileNames arrays.
-    const int namedResourceListSize = 7;
+    const int namedResourceListSize = 11;
 
     // Points to the start of a list of resource names.
     extern const char* namedResourceList[];

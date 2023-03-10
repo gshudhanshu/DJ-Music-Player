@@ -15,6 +15,12 @@ MainComponent::MainComponent()
 	// you add any child components.
 	setSize(800, 700);
 
+	//LookAndFeel::setDefaultLookAndFeel(&myTextButtonLookAndFeel);
+	LookAndFeel::setDefaultLookAndFeel(&myResizableWindowLookAndFeel);
+
+	player1.setPlayerColour(Colour(252, 183, 67));
+	player2.setPlayerColour(Colour(74, 244, 210));
+
 	// Some platforms require permissions to open input channels so request that here
 	if (RuntimePermissions::isRequired(RuntimePermissions::recordAudio)
 		&& !RuntimePermissions::isGranted(RuntimePermissions::recordAudio))
@@ -31,10 +37,8 @@ MainComponent::MainComponent()
 	addAndMakeVisible(header);
 	addAndMakeVisible(playlistComponent);
 
-
 	addAndMakeVisible(deckGUI1);
 	addAndMakeVisible(deckGUI2);
-
 
 	formatManager.registerBasicFormats();
 }

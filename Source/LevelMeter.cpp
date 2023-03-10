@@ -21,9 +21,10 @@ LevelMeter::LevelMeter(DJAudioPlayer* _player) : player(_player)
     targetValue = -60.0f;
     maxBarHeight = 200.0f;
     barWidth = 50.0f;
-    barColour = juce::Colours::green;
 
-    startTimerHz(24);
+    barColour = player->getPlayerColour();
+
+    startTimerHz(60);
 }
 
 LevelMeter::~LevelMeter()
@@ -32,23 +33,6 @@ LevelMeter::~LevelMeter()
 
 void LevelMeter::paint (juce::Graphics& g)
 {
-    ///* This demo code just fills the component's background and
-    //   draws some placeholder text to get you started.
-
-    //   You should replace everything in this method with your own
-    //   drawing code..
-    //*/
-
-    //g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));   // clear the background
-
-    //g.setColour (juce::Colours::grey);
-    //g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
-
-    //g.setColour (juce::Colours::white);
-    //g.setFont (14.0f);
-    //g.drawText ("LevelMeter", getLocalBounds(),
-    //            juce::Justification::centred, true);   // draw some placeholder text
-
 
 	// Draw background
     g.setColour(juce::Colours::black);
@@ -59,7 +43,7 @@ void LevelMeter::paint (juce::Graphics& g)
     if(barHeight < 0.0f) barHeight = 0.0f;
     float x = getWidth() / 2 - barWidth / 2;
     float y = getHeight() - barHeight;
-    g.setColour(barColour);
+	g.setColour(barColour);
     g.fillRect(x, y, barWidth, barHeight);
 
 }
@@ -92,5 +76,9 @@ void LevelMeter::timerCallback()
 {
     repaint();
     //setValue(player->getDecible()[channel]);
+    if(barColour.getBrightness() == 0)
+    {
+		barColour = player->getPlayerColour();
+    }
     updateValue();
 }

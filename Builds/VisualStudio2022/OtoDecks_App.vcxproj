@@ -2456,6 +2456,7 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\BinaryData.cpp"/>
+    <ClCompile Include="..\..\JuceLibraryCode\BinaryData2.cpp"/>
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_audio_basics.cpp"/>
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_audio_devices.cpp"/>
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_audio_formats.cpp"/>
@@ -3462,7 +3463,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Assets\backward_solid.svg"/>
+    <None Include="..\..\Assets\cyan_knob.png"/>
+    <None Include="..\..\Assets\cyan_slider.png"/>
     <None Include="..\..\Assets\forward_solid.svg"/>
+    <None Include="..\..\Assets\orange_knob.png"/>
+    <None Include="..\..\Assets\orange_slider.png"/>
     <None Include="..\..\Assets\pause_solid.svg"/>
     <None Include="..\..\Assets\play_solid.svg"/>
     <None Include="..\..\Assets\repeat_solid.svg"/>
