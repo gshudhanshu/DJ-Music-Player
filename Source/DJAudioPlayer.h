@@ -11,7 +11,8 @@
 #pragma once
 #include "../JuceLibraryCode/JuceHeader.h"
 
-class DJAudioPlayer : public AudioSource
+
+class DJAudioPlayer : public AudioSource, public ChangeListener
 
 {
   public:
@@ -22,8 +23,10 @@ class DJAudioPlayer : public AudioSource
     void prepareToPlay (int samplesPerBlockExpected, double sampleRate) override;
     void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) override;
     void releaseResources() override;
+    void changeListenerCallback(juce::ChangeBroadcaster* source) override;
 
     void loadURL(URL audioURL);
+
     void setGain(double gain);
     void setSpeed(double ratio);
     void setPosition(double posInSecs);
@@ -54,6 +57,8 @@ class DJAudioPlayer : public AudioSource
 
 
 private:
+
+    bool isLooping = false;
 
     AudioFormatReader* reader;
     AudioFormatManager& formatManager;

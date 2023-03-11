@@ -200,10 +200,14 @@ public:
 		setColour(ResizableWindow::backgroundColourId, Colour(0xff1e253a)); 
 		setColour(TableHeaderComponent::backgroundColourId, Colour(0xff1e253a));
 
+		setColour(juce::ListBox::backgroundColourId, Colours::grey);
+		setColour(juce::ListBox::textColourId, Colours::white);
+		setColour(juce::ListBox::outlineColourId, Colours::orange);
+
+		setColour(TextEditor::backgroundColourId, Colour(0xff1e253a));
+
 		setColour(TextButton::buttonColourId, Colour(0xff1e253a));
 		setColour(TextButton::textColourOffId, Colour(0xffffffff));
-
-		setColour(TextButton::textColourOnId, Colour(0xfffcb743));
 
 		setColour(TableHeaderComponent::textColourId, Colour(0xffffffff));
 	}

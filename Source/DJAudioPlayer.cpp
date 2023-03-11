@@ -39,25 +39,18 @@ void DJAudioPlayer::getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill
 {
 	filteredResampleSource.getNextAudioBlock(bufferToFill);
 
+	if(isLooping == true && readerSource->isLooping() == false)
+	{
+		readerSource->setLooping(true);
+
+	}
+
 	if (reader != nullptr)
 	{
 		AudioBuffer<float> buffer(2, bufferToFill.numSamples); // create new buffer for channel data
 
 		buffer.copyFrom(0, 0, bufferToFill.buffer->getReadPointer(0), bufferToFill.numSamples);
 		buffer.copyFrom(1, 0, bufferToFill.buffer->getReadPointer(1), bufferToFill.numSamples);
-
-		//AudioBuffer<float> leftChannel(1, bufferToFill.numSamples); // create new buffer for left channel data
-		//AudioBuffer<float> rightChannel(1, bufferToFill.numSamples); // create new buffer for left channel data
-
-		//leftChannel.copyFrom(0, 0, bufferToFill.buffer->getReadPointer(0), bufferToFill.numSamples);
-		// copy left channel data from bufferToFill to leftChannel
-
-		//rightChannel.copyFrom(0, 0, bufferToFill.buffer->getReadPointer(1), bufferToFill.numSamples);
-		// copy right channel data from bufferToFill to rightChannel
-
-		//// Calculate RMS values for left and right channels
-		//float leftRMS = buffer.getRMSLevel(0, 0, bufferToFill.numSamples);
-		//float rightRMS = buffer.getRMSLevel(0, 0, bufferToFill.numSamples);
 
 		// Calculate RMS values for left and right channels
 		//float leftRMS = buffer.getRMSLevel(0, 0, bufferToFill.numSamples);
@@ -73,7 +66,9 @@ void DJAudioPlayer::getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill
 
 		//leftDB = 20.0f * std::log10(leftRMS / referenceValue);
 		//rightDB = 20.0f * std::log10(rightRMS / referenceValue);
+
 	}
+
 
 }
 void DJAudioPlayer::releaseResources()
@@ -83,6 +78,7 @@ void DJAudioPlayer::releaseResources()
 	bassSource.releaseResources();
 	trebleSource.releaseResources();
 	filteredResampleSource.releaseResources();
+	
 }
 
 void DJAudioPlayer::loadURL(URL audioURL)
@@ -93,12 +89,24 @@ void DJAudioPlayer::loadURL(URL audioURL)
 		std::unique_ptr<AudioFormatReaderSource> newSource(new AudioFormatReaderSource(reader,
 			true));
 		transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
+		transportSource.addChangeListener(this);
 		readerSource.reset(newSource.release());
 
 		trackTitle = audioURL.getFileName();
 		trackSeconds = transportSource.getLengthInSeconds();
 	}
 }
+
+void DJAudioPlayer::changeListenerCallback(juce::ChangeBroadcaster* source)
+{
+	if (source == &transportSource && !transportSource.isPlaying())
+	{
+		stop();
+	}
+}
+
+
+
 void DJAudioPlayer::setGain(double gain)
 {
 	if (gain < 0 || gain > 1.0)
@@ -201,14 +209,15 @@ void DJAudioPlayer::pause()
 }
 void DJAudioPlayer::loop()
 {
-	if (transportSource.isLooping())
+	if (readerSource->isLooping())
 	{
-		
 		readerSource->setLooping(false);
+		isLooping = false;
 	}
 	else
 	{
 		readerSource->setLooping(true);
+		isLooping = true;
 	}
 }
 

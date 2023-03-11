@@ -78,8 +78,10 @@ private:
     FileChooser fChooser{"Select a file..."};
 
     DJAudioPlayer* player;
+    Colour playerColour;
     String* side;
     DiscArt discArt;
+
 
     MyRotarySliderLookAndFeel myRotarySliderLookAndFeel{side};
     MySliderLookAndFeel mySliderLookAndFeel{side};

@@ -81,5 +81,8 @@ private:
 	DeckGUI* deckGUI1;
 	DeckGUI* deckGUI2;
 
+	Component* activeTrack1 = nullptr;
+	Component* activeTrack2 = nullptr;
+
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PlaylistComponent)
 };

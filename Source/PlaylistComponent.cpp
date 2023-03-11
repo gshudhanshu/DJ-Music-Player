@@ -22,7 +22,7 @@ PlaylistComponent::PlaylistComponent(
 	deleteSvg = Drawable::createFromImageData(BinaryData::trash_solid_svg, BinaryData::trash_solid_svgSize);
 
 	String dir = File::getCurrentWorkingDirectory().getChildFile("playlist.txt").getFullPathName();
-	autoImportDefaultPlaylist(dir );
+	autoImportDefaultPlaylist(dir);
 
 	tableComponent.getHeader().addColumn("Load A", 1, 50, 50, 50);
 	tableComponent.getHeader().addColumn("Load B", 2, 50, 50, 50);
@@ -71,7 +71,7 @@ void PlaylistComponent::paint(juce::Graphics& g)
 
 	g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));   // clear the background
 
-	g.setColour(juce::Colours::grey);
+	g.setColour(juce::Colour(0xff1e253a));
 	g.drawRect(getLocalBounds(), 1);   // draw an outline around the component
 
 	g.setColour(juce::Colours::white);
@@ -118,7 +118,7 @@ void PlaylistComponent::paintRowBackground(Graphics& g, int rowNumber, int width
 	}
 	else
 	{
-		g.fillAll(Colours::darkgrey);
+		g.fillAll(Colour(0xff1e253a));
 	}
 }
 void PlaylistComponent::paintCell(Graphics& g, int rowNumber, int columnId, int width, int height, bool rowIsSelected)
@@ -133,28 +133,11 @@ void PlaylistComponent::paintCell(Graphics& g, int rowNumber, int columnId, int 
 		tracksArr = playlistArr;
 	}
 
-	if (columnId == 1) {
-		DrawableButton* loadDeck1Btn = new DrawableButton{ "LOAD_DECK_1", DrawableButton::ButtonStyle::ImageOnButtonBackground };
-		loadDeck1Btn->setImages(playSvg.get());
-		loadDeck1Btn->addListener(this);
-		int index = playlistArrIndex[rowNumber];
-		String id = String(index);
-		loadDeck1Btn->setComponentID(id);
-	}
-
-	if (columnId == 2)
-	{
-		DrawableButton* loadDeck2Btn = new DrawableButton{ "LOAD_DECK_2", DrawableButton::ButtonStyle::ImageOnButtonBackground };
-		loadDeck2Btn->setImages(playSvg.get());
-		loadDeck2Btn->addListener(this);
-		int index = playlistArrIndex[rowNumber];
-		String id = String(index);
-		loadDeck2Btn->setComponentID(id);
-	}
+	g.setColour(Colours::white);
 
 	if (columnId == 3)
 	{
-		g.drawText(tracksArr[rowNumber].getFileName(), 0, 0, width, height, Justification::centredLeft);
+		g.drawText(tracksArr[rowNumber].getFileName(), 10, 0, width, height, Justification::centredLeft);
 	}
 	if (columnId == 4 || columnId == 5)
 	{
@@ -181,17 +164,6 @@ void PlaylistComponent::paintCell(Graphics& g, int rowNumber, int columnId, int 
 			String time = convertSecTohhmmssFormat(seconds);
 			g.drawText(time, 0, 0, width, height, Justification::centredLeft);
 		}
-
-	}
-
-	if (columnId == 6)
-	{
-		DrawableButton* deleteTrackBtn = new DrawableButton{ "DELETE_TRACK", DrawableButton::ButtonStyle::ImageOnButtonBackground };
-		deleteTrackBtn->setImages(deleteSvg.get());
-		deleteTrackBtn->addListener(this);
-		int index = playlistArrIndex[rowNumber];
-		String id = String(index);
-		deleteTrackBtn->setComponentID(id);
 	}
 }
 
@@ -231,10 +203,10 @@ Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnI
 		}
 		return existingComponentToUpdate;
 	}
-		if(searchInput.isEmpty()){
-			existingComponentToUpdate->setComponentID(String(rowNumber));
-			return existingComponentToUpdate;
-		}
+	if (searchInput.isEmpty()) {
+		existingComponentToUpdate->setComponentID(String(rowNumber));
+		return existingComponentToUpdate;
+	}
 	return nullptr;
 }
 
@@ -273,10 +245,10 @@ void PlaylistComponent::importTracksToPlaylist()
 	auto flags = FileBrowserComponent::canSelectMultipleItems;
 	musicTracksChooser.launchAsync(flags, [this](const FileChooser& chooser)
 		{
-		auto file = chooser.getResults();
+			auto file = chooser.getResults();
 	playlistArr.addArray(file);
 	tableComponent.updateContent();
-	}
+		}
 	);
 }
 
@@ -312,7 +284,6 @@ void PlaylistComponent::exportTracksFromPlaylist()
 
 void PlaylistComponent::autoExportDefaultPlaylist(String path)
 {
-
 	//auto fileToSave = File::createTempFile("export_playlist.txt");
 	//for (auto file : playlistArr) {
 	//	fileToSave.appendText(file.getFullPathName() + "\n");
@@ -336,11 +307,10 @@ void PlaylistComponent::autoExportDefaultPlaylist(String path)
 		output.setPosition(0);  // default would append
 		output.truncate();
 		for (auto file : playlistArr) {
-			output.writeText(file.getFullPathName()+ "\n", false, false, "");
+			output.writeText(file.getFullPathName() + "\n", false, false, "");
 		}
 	}
 }
-
 
 void PlaylistComponent::importExportedPlaylist()
 {
@@ -441,7 +411,6 @@ void PlaylistComponent::searchTrackInPlaylist(String textString)
 	tableComponent.updateContent();
 	tableComponent.repaint();
 	//tableComponent.selectRow(0);
-
 }
 
 void PlaylistComponent::buttonClicked(Button* button)
@@ -462,12 +431,34 @@ void PlaylistComponent::buttonClicked(Button* button)
 	{
 		DBG("LOAD_DECK_1");
 		deckGUI1->loadTrackToDeck(playlistArr[id]);
+
+		//button->setColour(TextButton::buttonColourId, Colour(252, 183, 67));
+		//button->setTitle("Active");
+
+		//if (activeTrack1 != nullptr)
+		//{
+		//	activeTrack1->setColour(TextButton::buttonColourId, findColour(ResizableWindow::backgroundColourId));
+		//	activeTrack1->setTitle("");
+		//	activeTrack1 = nullptr;
+		//}
+		//activeTrack1 = button;
 	}
 
 	else if (button->getButtonText() == "LOAD_DECK_2")
 	{
 		DBG("LOAD_DECK_2");
 		deckGUI2->loadTrackToDeck(playlistArr[id]);
+
+		//button->setColour(TextButton::buttonColourId, Colour(74, 244, 210));
+		//button->setTitle("Active");
+
+		//if (activeTrack2 != nullptr)
+		//{
+		//	activeTrack2->setColour(TextButton::buttonColourId, findColour(ResizableWindow::backgroundColourId));
+		//	activeTrack2->setTitle("");
+		//	activeTrack2 = nullptr;
+		//}
+		//activeTrack2 = button;
 	}
 
 	else if (button == &importTracksBtn)
@@ -507,6 +498,6 @@ String PlaylistComponent::convertSecTohhmmssFormat(int seconds)
 		sec0 = "0";
 	}
 
-	String time = hr0+String(hr) + ":" + min0+String(min) + ":" + sec0+ String(sec);
+	String time = hr0 + String(hr) + ":" + min0 + String(min) + ":" + sec0 + String(sec);
 	return time;
 }

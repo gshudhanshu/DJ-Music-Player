@@ -15,12 +15,13 @@
 DeckGUI::DeckGUI(DJAudioPlayer* _player, String* _side,
 	juce::AudioFormatManager& formatManagerToUse,
 	juce::AudioThumbnailCache& cacheToUse)
-	: player(_player), side(_side), waveformDisplay(formatManagerToUse, cacheToUse),
+	: player(_player), side(_side),
+      waveformDisplay(formatManagerToUse, cacheToUse, playerColour),
       levelMeterL(_player), levelMeterR(_player),
       discArt(_player)
 
 {
-
+	playerColour = player->getPlayerColour();
 
 	// Import svg button SVGs
 	auto playSvg = Drawable::createFromImageData(BinaryData::play_solid_svg, BinaryData::play_solid_svgSize);
@@ -32,12 +33,12 @@ DeckGUI::DeckGUI(DJAudioPlayer* _player, String* _side,
 
 	sideButton.setButtonText(*side);
 
-
 	playButton.setImages(playSvg.get());
 	stopButton.setImages(stopSvg.get());
 	pauseButton.setImages(pauseSvg.get());
 	backwardButton.setImages(backwardSvg.get());
 	forwardButton.setImages(forwardSvg.get());
+	loopButton.setClickingTogglesState(true);
 	loopButton.setImages(loopSvg.get());
 
 	highPassSlider.setSliderStyle(juce::Slider::Rotary);
@@ -66,7 +67,6 @@ DeckGUI::DeckGUI(DJAudioPlayer* _player, String* _side,
 	volSlider.setValue(1.0);
 	volSlider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	volSlider.setLookAndFeel(&mySliderLookAndFeel);
-
 
 	levelMeterL.setChannel(0);
 	levelMeterR.setChannel(1);
@@ -157,6 +157,10 @@ void DeckGUI::resized()
 	juce::FlexBox volumeMeterAndVolSlider;
 	juce::FlexBox trackTitleDuration;
 
+	sideButton.setColour(TextButton::buttonColourId, player->getPlayerColour());
+	sideButton.setColour(TextButton::textColourOffId, findColour(ResizableWindow::backgroundColourId));
+
+
 	playerButtons.items.add(FlexItem(backwardButton).withFlex(1));
 	playerButtons.items.add(FlexItem(playButton).withFlex(1));
 	playerButtons.items.add(FlexItem(pauseButton).withFlex(1));
@@ -202,19 +206,6 @@ void DeckGUI::resized()
 	mainGUI.performLayout(getLocalBounds().toFloat());
 	sideButton.setTransform(AffineTransform::rotation(MathConstants<float>::pi*8 / 4.0f, sideButton.getWidth() / 2.0f,  sideButton.getHeight() / 2.0f));
 
-	//double rowH = getHeight() / 8;
-	//double rowW = getWidth() / 6;
-	//backwardButton.setBounds(rowW*0, 0, rowW, rowH);
-	//playButton.setBounds(rowW*1, 0, rowW, rowH);
-	//pauseButton.setBounds(rowW*2, 0, rowW, rowH);
-	//forwardButton.setBounds( rowW*3, 0, rowW, rowH);
-	//stopButton.setBounds(rowW*4, 0, rowW, rowH);
-	//loopButton.setBounds( rowW*5, 0, rowW, rowH);
-	//volSlider.setBounds(0, rowH * 2, getWidth(), rowH);
-	//speedSlider.setBounds(0, rowH * 3, getWidth(), rowH);
-	//posSlider.setBounds(0, rowH * 4, getWidth(), rowH);
-	//waveformDisplay.setBounds(0, rowH * 5, getWidth(), rowH * 2);
-	//loadButton.setBounds(0, rowH * 7, getWidth(), rowH);
 }
 
 void DeckGUI::buttonClicked(Button* button)
@@ -245,13 +236,26 @@ void DeckGUI::buttonClicked(Button* button)
 	{
 		std::cout << "Stop button was clicked " << std::endl;
 		player->forward();
-	}	if (button == &loopButton)
+	}	if (button == &loopButton && player->isPlaying())
 	{
+
+		if(loopButton.getToggleState())
+		{
+			loopButton.setColour(TextButton::buttonColourId, player->getPlayerColour());
+			loopButton.setColour(TextButton::buttonOnColourId, player->getPlayerColour());
+		} else
+		{
+			loopButton.setColour(TextButton::buttonColourId, Colour(0xff1e253a));
+			loopButton.setColour(TextButton::buttonOnColourId, Colour(0xff1e253a));
+
+		}
+
 		std::cout << "Stop button was clicked " << std::endl;
 		player->loop();
 	}
 	if (button == &loadButton)
 	{
+
 		auto fileChooserFlags =
 			FileBrowserComponent::canSelectFiles;
 		fChooser.launchAsync(fileChooserFlags, [this](const FileChooser& chooser)
@@ -318,7 +322,7 @@ void DeckGUI::loadTrackToDeck(File file)
 {
 	player->loadURL(URL{ file });
 	waveformDisplay.loadURL(URL{ file });
-	trackTitleTxt.setText(player->getTrackDetails()[0]);
+	trackTitleTxt.setText(URL::removeEscapeChars(player->getTrackDetails()[0]));
 	trackDurationTxt.setText(player->getTrackDetails()[1]);
 	player->start();
 
@@ -332,6 +336,14 @@ void DeckGUI::timerCallback()
 {
 	waveformDisplay.setPositionRelative(
 		player->getPositionRelative());
+	if (!player->isPlaying()){
+		discArt.setRotationSpeed(0);
+		Component* activeTrack = findChildWithID("ActiveTrack");
+		if(activeTrack != nullptr)
+		{
+			//activeTrack->setColour(TextButton::buttonColourId, Colour(0xff1e253a));
+		}
+	}
 	levelMeterL.setValue(player->getDecible()[0]);
 	levelMeterR.setValue(player->getDecible()[1]);
 }

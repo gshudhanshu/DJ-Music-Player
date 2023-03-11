@@ -20,7 +20,7 @@ class WaveformDisplay    : public Component,
 {
 public:
     WaveformDisplay( AudioFormatManager & 	formatManagerToUse,
-                    AudioThumbnailCache & 	cacheToUse );
+                    AudioThumbnailCache & 	cacheToUse, Colour& playerColour);
     ~WaveformDisplay();
 
     void paint (Graphics&) override;
@@ -38,6 +38,6 @@ private:
     AudioThumbnail audioThumb;
     bool fileLoaded; 
     double position;
-    
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveformDisplay)
 };
