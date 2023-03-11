@@ -13,10 +13,10 @@
 
 //==============================================================================
 WaveformDisplay::WaveformDisplay(AudioFormatManager & 	formatManagerToUse,
-                                 AudioThumbnailCache & 	cacheToUse, Colour & playerColour) :
+                                 AudioThumbnailCache & 	cacheToUse, Colour& playerColour) :
                                  audioThumb(1000, formatManagerToUse, cacheToUse), 
                                  fileLoaded(false), 
-                                 position(0)
+                                 position(0), playerColour(&playerColour)
                           
 {
     // In your constructor, you should add any child components, and
@@ -43,7 +43,9 @@ void WaveformDisplay::paint (Graphics& g)
     g.setColour (Colours::grey);
     g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
 
-    g.setColour (playerColour);
+
+
+    g.setColour (*playerColour);
     if(fileLoaded)
     {
       audioThumb.drawChannel(g, 

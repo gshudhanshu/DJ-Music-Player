@@ -16,7 +16,7 @@ MainComponent::MainComponent()
 
 	// Make sure you set the size of the component after
 	// you add any child components.
-	setSize(800, 700);
+	setSize(1000, 600);
 
 	//LookAndFeel::setDefaultLookAndFeel(&myTextButtonLookAndFeel);
 	LookAndFeel::setDefaultLookAndFeel(&myResizableWindowLookAndFeel);
@@ -92,7 +92,7 @@ void MainComponent::resized()
 
 	juce::FlexBox mainFlexBox;
 	mainFlexBox.flexDirection = juce::FlexBox::Direction::column;
-	mainFlexBox.items.add(juce::FlexItem(header).withFlex(0.7));
+	mainFlexBox.items.add(juce::FlexItem(header).withFlex(0.5));
 
 	juce::FlexBox decks;
 	decks.flexDirection = juce::FlexBox::Direction::row;
@@ -101,7 +101,7 @@ void MainComponent::resized()
 	decks.items.add(juce::FlexItem(deckGUI2).withFlex(1));
 
 	mainFlexBox.items.add(juce::FlexItem(decks).withFlex(4));
-	mainFlexBox.items.add(juce::FlexItem(playlistComponent).withFlex(4));
+	mainFlexBox.items.add(juce::FlexItem(playlistComponent).withFlex(2));
 
 
 	mainFlexBox.performLayout(getLocalBounds().toFloat());

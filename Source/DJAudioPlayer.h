@@ -10,6 +10,7 @@
 
 #pragma once
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "Utilities.h"
 
 
 class DJAudioPlayer : public AudioSource, public ChangeListener
@@ -55,13 +56,15 @@ class DJAudioPlayer : public AudioSource, public ChangeListener
     void setPlayerColour(Colour colour);
     Colour getPlayerColour();
 
-
 private:
 
     bool isLooping = false;
 
+    Utilities utils;
+
     AudioFormatReader* reader;
     AudioFormatManager& formatManager;
+    Colour playerColor;
 
     double trackSampleRate;
     int bassCutOffFreq = 300;
@@ -77,7 +80,7 @@ private:
     String trackTitle;
     int trackSeconds;
 
-    Colour playerColor;
+
     float leftDB;
     float rightDB;
 

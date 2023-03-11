@@ -16,12 +16,11 @@ DeckGUI::DeckGUI(DJAudioPlayer* _player, String* _side,
 	juce::AudioFormatManager& formatManagerToUse,
 	juce::AudioThumbnailCache& cacheToUse)
 	: player(_player), side(_side),
-      waveformDisplay(formatManagerToUse, cacheToUse, playerColour),
+	waveformDisplay(formatManagerToUse, cacheToUse, playerColour),
       levelMeterL(_player), levelMeterR(_player),
       discArt(_player)
 
 {
-	playerColour = player->getPlayerColour();
 
 	// Import svg button SVGs
 	auto playSvg = Drawable::createFromImageData(BinaryData::play_solid_svg, BinaryData::play_solid_svgSize);
@@ -41,25 +40,36 @@ DeckGUI::DeckGUI(DJAudioPlayer* _player, String* _side,
 	loopButton.setClickingTogglesState(true);
 	loopButton.setImages(loopSvg.get());
 
-	highPassSlider.setSliderStyle(juce::Slider::Rotary);
-	highPassSlider.setRange(0.1, 2.0);
-	highPassSlider.setValue(1.0);
-	highPassSlider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
-	highPassSlider.setLookAndFeel(&myRotarySliderLookAndFeel);
-
-
-	lowPassSlider.setSliderStyle(juce::Slider::Rotary);
+	lowPassSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
 	lowPassSlider.setRange(0.1, 2.0);
 	lowPassSlider.setValue(1.0);
-	lowPassSlider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+	lowPassSlider.setTextBoxStyle(Slider::NoTextBox, false, 50, 20);
 	lowPassSlider.setLookAndFeel(&myRotarySliderLookAndFeel);
 
+	lowPassSliderLabel.setText("Bass", NotificationType::dontSendNotification);
+	lowPassSliderLabel.attachToComponent(&lowPassSlider, false);
+	lowPassSliderLabel.setJustificationType(Justification::centredBottom);
 
-	speedSlider.setSliderStyle(juce::Slider::Rotary);
+
+	highPassSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
+	highPassSlider.setRange(0.1, 2.0);
+	highPassSlider.setValue(1.0);
+	highPassSlider.setTextBoxStyle(Slider::NoTextBox, false,50,20);
+	highPassSlider.setLookAndFeel(&myRotarySliderLookAndFeel);
+
+	highPassSliderLabel.setText("Treble", NotificationType::dontSendNotification);
+	highPassSliderLabel.attachToComponent(&highPassSlider, false);
+	highPassSliderLabel.setJustificationType(Justification::centredBottom);
+
+	speedSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
 	speedSlider.setRange(0.0, 5.0);
 	speedSlider.setValue(1.0);
-	speedSlider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+	speedSlider.setTextBoxStyle(Slider::NoTextBox, false, 50, 20);
 	speedSlider.setLookAndFeel(&myRotarySliderLookAndFeel);
+
+	speedSliderLabel.setText("Speed", NotificationType::dontSendNotification);
+	speedSliderLabel.attachToComponent(&speedSlider, false);
+	speedSliderLabel.setJustificationType(Justification::centredBottom);
 
 
 	volSlider.setSliderStyle(juce::Slider::LinearVertical);
@@ -75,8 +85,8 @@ DeckGUI::DeckGUI(DJAudioPlayer* _player, String* _side,
 
 	trackTitleTxt.setText("Track not loaded");
 	trackDurationTxt.setText("00:00");
-	trackTitleTxt.isReadOnly();
-	trackDurationTxt.isReadOnly();
+	trackTitleTxt.setReadOnly(true);
+	trackDurationTxt.setReadOnly(true);
 
 	addAndMakeVisible(sideButton);
 	addAndMakeVisible(discArt);
@@ -157,9 +167,9 @@ void DeckGUI::resized()
 	juce::FlexBox volumeMeterAndVolSlider;
 	juce::FlexBox trackTitleDuration;
 
-	sideButton.setColour(TextButton::buttonColourId, player->getPlayerColour());
+	playerColour = player->getPlayerColour();
+	sideButton.setColour(TextButton::buttonColourId, playerColour);
 	sideButton.setColour(TextButton::textColourOffId, findColour(ResizableWindow::backgroundColourId));
-
 
 	playerButtons.items.add(FlexItem(backwardButton).withFlex(1));
 	playerButtons.items.add(FlexItem(playButton).withFlex(1));
@@ -173,9 +183,13 @@ void DeckGUI::resized()
 	volumeMeterAndVolSlider.items.add(FlexItem(levelMeterR).withFlex(1));
 
 	adjKnobs.flexDirection = juce::FlexBox::Direction::column;
+	adjKnobs.items.add(FlexItem().withFlex(0.3));
 	adjKnobs.items.add(FlexItem(lowPassSlider).withFlex(1));
+	adjKnobs.items.add(FlexItem().withFlex(0.3));
 	adjKnobs.items.add(FlexItem(highPassSlider).withFlex(1));
+	adjKnobs.items.add(FlexItem().withFlex(0.3));
 	adjKnobs.items.add(FlexItem(speedSlider).withFlex(1));
+
 
 	if(*side == String("A"))
 	{
@@ -198,10 +212,10 @@ void DeckGUI::resized()
 
 	mainGUI.flexDirection = juce::FlexBox::Direction::column;
 	mainGUI.items.add(FlexItem(diskArtAdjKnobsAndVol).withFlex(5));
-	mainGUI.items.add(FlexItem(trackInfo).withFlex(1));
+	mainGUI.items.add(FlexItem(trackInfo).withFlex(0.75));
 	mainGUI.items.add(FlexItem(waveformDisplay).withFlex(1));
-	mainGUI.items.add(FlexItem(playerButtons).withFlex(1));
-	mainGUI.items.add(FlexItem(loadButton).withFlex(1));
+	mainGUI.items.add(FlexItem(playerButtons).withFlex(0.75));
+	mainGUI.items.add(FlexItem(loadButton).withFlex(0.75));
 
 	mainGUI.performLayout(getLocalBounds().toFloat());
 	sideButton.setTransform(AffineTransform::rotation(MathConstants<float>::pi*8 / 4.0f, sideButton.getWidth() / 2.0f,  sideButton.getHeight() / 2.0f));
@@ -247,11 +261,15 @@ void DeckGUI::buttonClicked(Button* button)
 		{
 			loopButton.setColour(TextButton::buttonColourId, Colour(0xff1e253a));
 			loopButton.setColour(TextButton::buttonOnColourId, Colour(0xff1e253a));
-
 		}
 
 		std::cout << "Stop button was clicked " << std::endl;
 		player->loop();
+	} else
+	{
+		loopButton.setToggleState(false, NotificationType::dontSendNotification);
+		loopButton.setColour(TextButton::buttonColourId, Colour(0xff1e253a));
+		loopButton.setColour(TextButton::buttonOnColourId, Colour(0xff1e253a));
 	}
 	if (button == &loadButton)
 	{
@@ -336,13 +354,11 @@ void DeckGUI::timerCallback()
 {
 	waveformDisplay.setPositionRelative(
 		player->getPositionRelative());
+
+	trackDurationTxt.setText(player->getTrackDetails()[1]);
+
 	if (!player->isPlaying()){
 		discArt.setRotationSpeed(0);
-		Component* activeTrack = findChildWithID("ActiveTrack");
-		if(activeTrack != nullptr)
-		{
-			//activeTrack->setColour(TextButton::buttonColourId, Colour(0xff1e253a));
-		}
 	}
 	levelMeterL.setValue(player->getDecible()[0]);
 	levelMeterR.setValue(player->getDecible()[1]);

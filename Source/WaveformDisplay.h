@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include "DJAudioPlayer.h"
 #include "../JuceLibraryCode/JuceHeader.h"
 
 //==============================================================================
@@ -20,7 +21,7 @@ class WaveformDisplay    : public Component,
 {
 public:
     WaveformDisplay( AudioFormatManager & 	formatManagerToUse,
-                    AudioThumbnailCache & 	cacheToUse, Colour& playerColour);
+                    AudioThumbnailCache & 	cacheToUse, Colour &playerColour);
     ~WaveformDisplay();
 
     void paint (Graphics&) override;
@@ -38,6 +39,7 @@ private:
     AudioThumbnail audioThumb;
     bool fileLoaded; 
     double position;
+    Colour* playerColour;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveformDisplay)
 };

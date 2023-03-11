@@ -11,6 +11,7 @@
 #pragma once
 #include <JuceHeader.h>
 #include "DeckGUI.h"
+#include "Utilities.h"
 
 
 //==============================================================================
@@ -37,10 +38,10 @@ public:
 
 	void buttonClicked(Button* button) override;
 
-	String convertSecTohhmmssFormat(int seconds);
-
 
 private:
+
+	Utilities utils;
 
 	AudioFormatManager formatManager;
 

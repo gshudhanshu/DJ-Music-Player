@@ -77,9 +77,10 @@ private:
 
     FileChooser fChooser{"Select a file..."};
 
-    DJAudioPlayer* player;
     Colour playerColour;
-    String* side;
+    DJAudioPlayer* player;
+
+	String* side;
     DiscArt discArt;
 
 

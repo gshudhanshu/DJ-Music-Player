@@ -9,6 +9,7 @@ Author:  matthew
 */
 
 #include "DJAudioPlayer.h"
+#include "PlaylistComponent.h"
 
 DJAudioPlayer::DJAudioPlayer(AudioFormatManager& _formatManager)
 	: formatManager(_formatManager)
@@ -231,21 +232,14 @@ double DJAudioPlayer::getPositionRelative()
 
 Array <String> DJAudioPlayer::getTrackDetails()
 {
-	String hr0, min0, sec0;
-	int hr = (trackSeconds / 3600);
-	int min = (trackSeconds / 60) % 60;
-	int sec = (trackSeconds % 60);
-	if (hr < 10) {
-		hr0 = "0";
-	}
-	if (min < 10) {
-		min0 = "0";
-	}
-	if (sec < 10) {
-		sec0 = "0";
-	}
+	auto currentTime = utils.convertSecTohhmmssFormat(transportSource.getCurrentPosition());
 
-	String time = hr0 + String(hr) + ":" + min0 + String(min) + ":" + sec0 + String(sec);
+	if (trackSeconds <= 0)
+	{
+		trackSeconds = 0;
+	}
+	auto totalTime = utils.convertSecTohhmmssFormat(trackSeconds);
+	auto time = currentTime + "/" + totalTime;
 	return { trackTitle, time };
 }
 
@@ -258,7 +252,6 @@ bool DJAudioPlayer::isPlaying()
 {
 		return transportSource.isPlaying();
 }
-
 
 
 void DJAudioPlayer::setPlayerColour(Colour colour)

@@ -161,7 +161,7 @@ void PlaylistComponent::paintCell(Graphics& g, int rowNumber, int columnId, int 
 		if (columnId == 5 && reader)
 		{
 			int seconds = reader->lengthInSamples / reader->sampleRate;
-			String time = convertSecTohhmmssFormat(seconds);
+			String time = utils.convertSecTohhmmssFormat(seconds);
 			g.drawText(time, 0, 0, width, height, Justification::centredLeft);
 		}
 	}
@@ -248,6 +248,8 @@ void PlaylistComponent::importTracksToPlaylist()
 			auto file = chooser.getResults();
 	playlistArr.addArray(file);
 	tableComponent.updateContent();
+	tableComponent.repaint();
+	tableComponent.selectRow(0);
 		}
 	);
 }
@@ -284,21 +286,7 @@ void PlaylistComponent::exportTracksFromPlaylist()
 
 void PlaylistComponent::autoExportDefaultPlaylist(String path)
 {
-	//auto fileToSave = File::createTempFile("export_playlist.txt");
-	//for (auto file : playlistArr) {
-	//	fileToSave.appendText(file.getFullPathName() + "\n");
-	//}
 
-	//URL result = URL{ File(path).getFullPathName() };
-	//std::unique_ptr<InputStream>  wi(fileToSave.createInputStream());
-	//std::unique_ptr<OutputStream> wo(result.createOutputStream());
-	//if (wi.get() != nullptr && wo.get() != nullptr)
-	//{
-	//	DBG("Writing to file");
-	//	auto numWritten = wo->writeFromInputStream(*wi, -1);
-	//	jassertquiet(numWritten > 0);
-	//	wo->flush();
-	//}
 
 	auto file = juce::File::getCurrentWorkingDirectory().getChildFile("playlist.txt");
 	FileOutputStream output(file);
@@ -410,7 +398,7 @@ void PlaylistComponent::searchTrackInPlaylist(String textString)
 	// Update the table to display the filtered playlist
 	tableComponent.updateContent();
 	tableComponent.repaint();
-	//tableComponent.selectRow(0);
+	tableComponent.selectRow(0);
 }
 
 void PlaylistComponent::buttonClicked(Button* button)
@@ -480,24 +468,4 @@ void PlaylistComponent::buttonClicked(Button* button)
 	{
 		clearPlaylist();
 	}
-}
-
-String PlaylistComponent::convertSecTohhmmssFormat(int seconds)
-{
-	String hr0, min0, sec0;
-	int hr = (seconds / 3600);
-	int min = (seconds / 60) % 60;
-	int sec = (seconds % 60);
-	if (hr < 10) {
-		hr0 = "0";
-	}
-	if (min < 10) {
-		min0 = "0";
-	}
-	if (sec < 10) {
-		sec0 = "0";
-	}
-
-	String time = hr0 + String(hr) + ":" + min0 + String(min) + ":" + sec0 + String(sec);
-	return time;
 }
