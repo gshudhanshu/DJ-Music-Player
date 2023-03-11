@@ -23,14 +23,20 @@ public:
     LevelMeter(DJAudioPlayer* player);
     ~LevelMeter() override;
 
+    
     void paint (juce::Graphics&) override;
     void resized() override;
 
-    void setValue(float newValue);
+    // Set the value of the level meter
+	void setValue(float newValue);
+
+    // Set the channel of the level meter
     void setChannel(int channel);
 
+    // Update the value of the level meter
     void updateValue();
 
+    // Timer callback for updating the recurring events
     void timerCallback() override;
 
 

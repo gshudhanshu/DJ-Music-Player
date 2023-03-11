@@ -21,12 +21,14 @@ PlaylistComponent::PlaylistComponent(
 	playSvg = Drawable::createFromImageData(BinaryData::play_solid_svg, BinaryData::play_solid_svgSize);
 	deleteSvg = Drawable::createFromImageData(BinaryData::trash_solid_svg, BinaryData::trash_solid_svgSize);
 
+	// Default playlist directory
 	String dir = File::getCurrentWorkingDirectory().getChildFile("playlist.txt").getFullPathName();
+	// Auto import default playlist
 	autoImportDefaultPlaylist(dir);
 
+	// Table header setup
 	tableComponent.getHeader().addColumn("Load A", 1, 50, 50, 50);
 	tableComponent.getHeader().addColumn("Load B", 2, 50, 50, 50);
-
 	tableComponent.getHeader().addColumn("Track title", 3, 100);
 	tableComponent.getHeader().addColumn("Format", 4, 100, 70, 100);
 	tableComponent.getHeader().addColumn("Time", 5, 100, 70, 100);
@@ -38,13 +40,17 @@ PlaylistComponent::PlaylistComponent(
 	tableComponent.autoSizeAllColumns();
 	addAndMakeVisible(tableComponent);
 
-	searchInput.setTextToShowWhenEmpty("Search...", juce::Colours::grey);
+	searchInput.setTextToShowWhenEmpty("Search...", juce::Colours::lightgrey);
+	searchInput.setJustification(Justification::centred);
+
+	// Make buttons visible
 	addAndMakeVisible(searchInput);
 	addAndMakeVisible(importTracksBtn);
 	addAndMakeVisible(importPlaylistBtn);
 	addAndMakeVisible(exportPlaylistBtn);
 	addAndMakeVisible(clearPlaylistBtn);
 
+	// Add button listeners
 	importTracksBtn.addListener(this);
 	importPlaylistBtn.addListener(this);
 	exportPlaylistBtn.addListener(this);
@@ -55,22 +61,14 @@ PlaylistComponent::PlaylistComponent(
 PlaylistComponent::~PlaylistComponent()
 {
 	String dir = File::getCurrentWorkingDirectory().getChildFile("playlist.txt").getFullPathName();
-	DBG(dir);
 	autoExportDefaultPlaylist(dir);
 	tableComponent.setModel(nullptr);
 }
 
 void PlaylistComponent::paint(juce::Graphics& g)
 {
-	/* This demo code just fills the component's background and
-	   draws some placeholder text to get you started.
-
-	   You should replace everything in this method with your own
-	   drawing code..
-	*/
 
 	g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));   // clear the background
-
 	g.setColour(juce::Colour(0xff1e253a));
 	g.drawRect(getLocalBounds(), 1);   // draw an outline around the component
 
@@ -82,9 +80,11 @@ void PlaylistComponent::paint(juce::Graphics& g)
 
 void PlaylistComponent::resized()
 {
+	// Initialize flexbox
 	juce::FlexBox playlistFlex;
 	juce::FlexBox actions;
 
+	// Playlist action buttons
 	actions.flexDirection = juce::FlexBox::Direction::column;
 	actions.items.add(juce::FlexItem(searchInput).withFlex(1).withMaxHeight(30));
 	actions.items.add(juce::FlexItem(importTracksBtn).withFlex(1).withMaxHeight(30));
@@ -98,18 +98,18 @@ void PlaylistComponent::resized()
 	tableComponent.autoSizeAllColumns();
 
 	playlistFlex.performLayout(getLocalBounds().toFloat());
-
-	// This method is where you should set the bounds of any child
-	// components that your component contains..
 }
+
 
 int PlaylistComponent::getNumRows()
 {
+	// If search input is not empty, return the size of the filtered playlist array
 	if (!searchInput.isEmpty()) {
 		return filteredPlaylistArr.size();
 	}
 	return playlistArr.size();
 }
+
 void PlaylistComponent::paintRowBackground(Graphics& g, int rowNumber, int width, int height, bool rowIsSelected)
 {
 	if (rowIsSelected)
@@ -121,8 +121,10 @@ void PlaylistComponent::paintRowBackground(Graphics& g, int rowNumber, int width
 		g.fillAll(Colour(0xff1e253a));
 	}
 }
+
 void PlaylistComponent::paintCell(Graphics& g, int rowNumber, int columnId, int width, int height, bool rowIsSelected)
 {
+	// Create a temporary array to store the playlist array
 	Array <juce::File> tracksArr;
 	if (!searchInput.isEmpty())
 	{
@@ -145,6 +147,7 @@ void PlaylistComponent::paintCell(Graphics& g, int rowNumber, int columnId, int 
 		formatManager.registerBasicFormats();
 		ScopedPointer<AudioFormatReader> reader = formatManager.createReaderFor(tracksArr[rowNumber]);
 
+		// Get the metadata of the mp3 file
 		// if (reader) {
 		//        for (String key : reader->metadataValues.getAllKeys()) {
 		//        DBG("Key: " + key + " value: " + reader->metadataValues.getValue(key, "unknown"));
@@ -158,6 +161,7 @@ void PlaylistComponent::paintCell(Graphics& g, int rowNumber, int columnId, int 
 			//Juce is not able to read the metadata of the mp3 file so I am using 'file format' instead of 'artist'.
 			g.drawText(reader->getFormatName(), 0, 0, width, height, Justification::centredLeft);
 		}
+
 		if (columnId == 5 && reader)
 		{
 			int seconds = reader->lengthInSamples / reader->sampleRate;
@@ -169,7 +173,7 @@ void PlaylistComponent::paintCell(Graphics& g, int rowNumber, int columnId, int 
 
 Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnId, bool isRowSelected, Component* existingComponentToUpdate)
 {
-	//existingComponentToUpdate == nullptr;
+	// If the existingComponentToUpdate component is null then update the component
 	if (existingComponentToUpdate == nullptr)
 	{
 		if (columnId == 1) {
@@ -181,6 +185,7 @@ Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnI
 			loadDeck1Btn->setComponentID(id);
 			existingComponentToUpdate = loadDeck1Btn;
 		}
+
 		else if (columnId == 2)
 		{
 			DrawableButton* loadDeck2Btn = new DrawableButton{ "LOAD_DECK_2", DrawableButton::ButtonStyle::ImageOnButtonBackground };
@@ -191,6 +196,7 @@ Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnI
 			loadDeck2Btn->setComponentID(id);
 			existingComponentToUpdate = loadDeck2Btn;
 		}
+
 		else if (columnId == 6)
 		{
 			DrawableButton* deleteTrackBtn = new DrawableButton{ "DELETE_TRACK", DrawableButton::ButtonStyle::ImageOnButtonBackground };
@@ -201,40 +207,47 @@ Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnI
 			deleteTrackBtn->setComponentID(id);
 			existingComponentToUpdate = deleteTrackBtn;
 		}
+
 		return existingComponentToUpdate;
 	}
+
+	// If search input is not empty, update the component id of the existing component
 	if (searchInput.isEmpty()) {
 		existingComponentToUpdate->setComponentID(String(rowNumber));
 		return existingComponentToUpdate;
 	}
+
+	// Else remove the remove the existing component
 	return nullptr;
 }
 
 void PlaylistComponent::deleteTrackFromPlaylist(int id)
 {
-	//Reference https://forum.juce.com/t/displaying-okcancel-window/47646
 	const auto callback = juce::ModalCallbackFunction::create([this, id](int result) {
+
+		// result == 0 means you click Cancel
 		if (result == 0)
 		{
 			return;
-		}// result == 0 means you click Cancel
-	if (result == 1)
-	{
-		if (searchInput.isEmpty())
-		{
-			playlistArr.remove(id);
 		}
 
-		else
+		// result == 1 means you click OK
+		if (result == 1)
 		{
-			int index = playlistArrIndex[id];
-			DBG(index);
-			playlistArr.remove(index);
+			if (searchInput.isEmpty())
+			{
+				playlistArr.remove(id);
+			}
+			else
+			{
+				int index = playlistArrIndex[id];
+				playlistArr.remove(index);
+			}
+
+			tableComponent.updateContent();
+			searchTrackInPlaylist(searchInput.getText());
 		}
-		tableComponent.updateContent();
-		searchTrackInPlaylist(searchInput.getText());
-	}// result == 1 means you click OK
-		});
+	});
 
 	AlertWindow::showOkCancelBox(MessageBoxIconType::QuestionIcon, "Delete Track", "Are you sure you want to delete this track?", "Yes", "No", {},
 		callback);
@@ -244,56 +257,61 @@ void PlaylistComponent::importTracksToPlaylist()
 {
 	auto flags = FileBrowserComponent::canSelectMultipleItems;
 	musicTracksChooser.launchAsync(flags, [this](const FileChooser& chooser)
-		{
-			auto file = chooser.getResults();
-	playlistArr.addArray(file);
-	tableComponent.updateContent();
-	tableComponent.repaint();
-	tableComponent.selectRow(0);
-		}
-	);
+	{
+		auto file = chooser.getResults();
+		playlistArr.addArray(file);
+		tableComponent.updateContent();
+		tableComponent.repaint();
+		tableComponent.selectRow(0);
+	});
 }
 
 void PlaylistComponent::exportTracksFromPlaylist()
 {
+	// Create a temp file to store the playlist
 	auto fileToSave = File::createTempFile("export_playlist.txt");
 
+	// Append the playlist to the temp file
 	for (auto file : playlistArr) {
 		fileToSave.appendText(file.getFullPathName() + "\n");
 	}
 
 	auto flags = FileBrowserComponent::saveMode;
+
+	// Export the temp file to the user's computer
 	exportPlaylist.launchAsync(flags, [this, fileToSave](const FileChooser& chooser)
-		{
-			auto result = chooser.getURLResult();
-	auto name = result.isEmpty() ? String()
-		: (result.isLocalFile() ? result.getLocalFile().getFullPathName()
-			: result.toString(true));
-	if (!result.isEmpty())
 	{
-		std::unique_ptr<InputStream>  wi(fileToSave.createInputStream());
-		std::unique_ptr<OutputStream> wo(result.createOutputStream());
-		if (wi.get() != nullptr && wo.get() != nullptr)
+		auto result = chooser.getURLResult();
+		auto name = result.isEmpty() ? String()
+							  : (result.isLocalFile() ? result.getLocalFile().getFullPathName()
+							  : result.toString(true));
+		if (!result.isEmpty())
 		{
-			auto numWritten = wo->writeFromInputStream(*wi, -1);
-			jassertquiet(numWritten > 0);
-			wo->flush();
+			std::unique_ptr<InputStream>  wi(fileToSave.createInputStream());
+			std::unique_ptr<OutputStream> wo(result.createOutputStream());
+
+			// Copy the temp file to the user's computer
+			if (wi.get() != nullptr && wo.get() != nullptr)
+			{
+				auto numWritten = wo->writeFromInputStream(*wi, -1);
+				jassertquiet(numWritten > 0);
+				wo->flush();
+			}
 		}
-	}
-		}
-	);
+	});
 }
 
 void PlaylistComponent::autoExportDefaultPlaylist(String path)
 {
-
-
 	auto file = juce::File::getCurrentWorkingDirectory().getChildFile("playlist.txt");
 	FileOutputStream output(file);
+
 	if (output.openedOk())
 	{
 		output.setPosition(0);  // default would append
 		output.truncate();
+
+		// Append the playlist to the playlist.txt
 		for (auto file : playlistArr) {
 			output.writeText(file.getFullPathName() + "\n", false, false, "");
 		}
@@ -304,17 +322,17 @@ void PlaylistComponent::importExportedPlaylist()
 {
 	auto flags = FileBrowserComponent::canSelectMultipleItems;
 	importPlaylist.launchAsync(flags, [this](const FileChooser& chooser)
-		{
-			auto result = chooser.getURLResult();
-	auto name = result.isEmpty() ? String()
-		: (result.isLocalFile() ? result.getLocalFile().getFullPathName()
-			: result.toString(true));
-	if (!result.isEmpty())
 	{
-		autoImportDefaultPlaylist(result.getLocalFile().getFullPathName());
-	}
+		auto result = chooser.getURLResult();
+		auto name = result.isEmpty() ? String()
+						  : (result.isLocalFile() ? result.getLocalFile().getFullPathName()
+						  : result.toString(true));
+
+		if (!result.isEmpty())
+		{
+			autoImportDefaultPlaylist(result.getLocalFile().getFullPathName());
 		}
-	);
+	});
 }
 
 void PlaylistComponent::autoImportDefaultPlaylist(String path)
@@ -334,22 +352,28 @@ void PlaylistComponent::autoImportDefaultPlaylist(String path)
 		auto line = inputStream.readNextLine();
 		playlistArr.add(File(line));
 	}
+
+	// Update the table component
 	tableComponent.updateContent();
+	tableComponent.repaint();
 }
 
 void PlaylistComponent::clearPlaylist()
 {
 	const auto callback = juce::ModalCallbackFunction::create([this](int result) {
+		// result == 0 means you click Cancel
 		if (result == 0)
 		{
 			return;
-		}// result == 0 means you click Cancel
-	if (result == 1)
-	{
-		playlistArr.clear();
-		tableComponent.updateContent();
-	}// result == 1 means you click OK
-		});
+		}
+
+		// result == 1 means you click OK
+		if (result == 1)
+		{
+			playlistArr.clear();
+			tableComponent.updateContent();
+		}
+	});
 
 	AlertWindow::showOkCancelBox(MessageBoxIconType::QuestionIcon, "Clear playlist", "Are you sure you want to clear playlist?", "Yes", "No", {},
 		callback);
@@ -357,22 +381,8 @@ void PlaylistComponent::clearPlaylist()
 
 void PlaylistComponent::searchTrackInPlaylist(String textString)
 {
-	//if (textString.isNotEmpty())
-	//{
-	//	filteredPlaylistArr.clear();
-	//	for (int i = 0; i < playlistArr.size(); ++i)
-	//	{
-	//		if (playlistArr[i].getFileName().containsIgnoreCase(textString))
-	//		{
-	//			filteredPlaylistArr.add(playlistArr[i]);
-	//			playlistArrIndex.add(i);
-	//			//DBG(i);
-	//		}
-	//	}
-	//}
-	//tableComponent.updateContent();
 
-		// Clear the filtered playlist array
+	// Clear the filtered playlist array
 	filteredPlaylistArr.clear();
 
 	// Iterate through the playlist array and add the matching tracks to the filtered playlist array
@@ -404,6 +414,7 @@ void PlaylistComponent::searchTrackInPlaylist(String textString)
 void PlaylistComponent::buttonClicked(Button* button)
 {
 	int id;
+	// Get the id of the button
 	if (button->getComponentID() != "")
 	{
 		id = std::stoi(button->getComponentID().toStdString());
@@ -420,6 +431,7 @@ void PlaylistComponent::buttonClicked(Button* button)
 		DBG("LOAD_DECK_1");
 		deckGUI1->loadTrackToDeck(playlistArr[id]);
 
+		//Active track button is not working properly 
 		//button->setColour(TextButton::buttonColourId, Colour(252, 183, 67));
 		//button->setTitle("Active");
 
@@ -437,6 +449,7 @@ void PlaylistComponent::buttonClicked(Button* button)
 		DBG("LOAD_DECK_2");
 		deckGUI2->loadTrackToDeck(playlistArr[id]);
 
+		//Active track button is not working properly 
 		//button->setColour(TextButton::buttonColourId, Colour(74, 244, 210));
 		//button->setTitle("Active");
 

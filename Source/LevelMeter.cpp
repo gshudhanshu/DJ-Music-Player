@@ -14,14 +14,13 @@
 //==============================================================================
 LevelMeter::LevelMeter(DJAudioPlayer* _player) : player(_player)
 {
-    // In your constructor, you should add any child components, and
-    // initialise any special settings that your component needs.
     // Set up default values
     decibles = -30.0f;
     targetValue = -60.0f;
     maxBarHeight = 200.0f;
     barWidth = 50.0f;
 
+    // Set bar colour
     barColour = player->getPlayerColour();
 
     startTimerHz(60);
@@ -38,7 +37,7 @@ void LevelMeter::paint (juce::Graphics& g)
     g.setColour(juce::Colours::black);
     g.fillRect(getLocalBounds());
 
-    // Draw bar graph
+    // Draw bar graph for decibles
     float barHeight = juce::jmap(decibles, -60.0f, 0.0f, 0.0f, maxBarHeight);
     if(barHeight < 0.0f) barHeight = 0.0f;
     float x = getWidth() / 2 - barWidth / 2;
@@ -67,15 +66,12 @@ void LevelMeter::updateValue()
 
 void LevelMeter::resized()
 {
-    // This method is where you should set the bounds of any child
-    // components that your component contains..
 
 }
 
 void LevelMeter::timerCallback()
 {
     repaint();
-    //setValue(player->getDecible()[channel]);
     if(barColour.getBrightness() == 0)
     {
 		barColour = player->getPlayerColour();

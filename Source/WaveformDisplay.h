@@ -27,12 +27,16 @@ public:
     void paint (Graphics&) override;
     void resized() override;
 
+    // Change listener callback for updating the waveform display
     void changeListenerCallback (ChangeBroadcaster *source) override;
 
+    // Load the audio file to the waveform display
     void loadURL(URL audioURL);
 
-    /** set the relative position of the playhead*/
+    // set the relative position of the playhead
     void setPositionRelative(double pos);
+
+	// get the relative position of the mouse
     float getMousePosition();
 
 private:

@@ -25,19 +25,20 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
 
+    // Timer callback for updating the recurring events
     void timerCallback();
+
+    // Set the disc color
     void setDiscColour(Colour newColour);
+    // Set the rotation speed
     void setRotationSpeed(float newSpeed);
 
 private:
-    //float mCenterX = 0.0f;
-    //float mCenterY = 0.0f;
-
     DJAudioPlayer* player;
     Colour primaryColor;
 
     float rotationAngle = 0.0f;
-    float rotationSpeed = 0.0f; // Default rotation speed
+    float rotationSpeed = 0.0f;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DiscArt)
 };

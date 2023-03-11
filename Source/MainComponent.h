@@ -42,18 +42,17 @@ private:
     //==============================================================================
     // Your private member variables go here...
 
+    // Look and Feel
     MyTextButtonLookAndFeel myTextButtonLookAndFeel;
     MyResizableWindowLookAndFeel myResizableWindowLookAndFeel;
 
     AudioFormatManager formatManager;
-
     AudioThumbnailCache thumbCache{100};
 
     Header header;
 
     DJAudioPlayer player1{formatManager};
     DJAudioPlayer player2{ formatManager };
-
 
     String left = "A";
     DeckGUI deckGUI1{&player1, &left, formatManager, thumbCache };

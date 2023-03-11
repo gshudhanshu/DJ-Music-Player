@@ -9,12 +9,9 @@
 */
 
 #pragma once
-
 #include <JuceHeader.h>
 
-//==============================================================================
-/*
-*/
+
 class Header  : public juce::Component
 {
 public:

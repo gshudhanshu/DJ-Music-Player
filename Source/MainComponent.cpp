@@ -11,11 +11,11 @@
 //==============================================================================
 MainComponent::MainComponent()
 {
+	// Set player theme colors
 	player1.setPlayerColour(Colour(252, 183, 67));
 	player2.setPlayerColour(Colour(74, 244, 210));
 
-	// Make sure you set the size of the component after
-	// you add any child components.
+	// Setting the size of the window
 	setSize(1000, 600);
 
 	//LookAndFeel::setDefaultLookAndFeel(&myTextButtonLookAndFeel);
@@ -63,7 +63,6 @@ void MainComponent::prepareToPlay(int samplesPerBlockExpected, double sampleRate
 }
 void MainComponent::getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill)
 {
-
 	mixerSource.getNextAudioBlock(bufferToFill);
 }
 
@@ -84,30 +83,24 @@ void MainComponent::paint(Graphics& g)
 	// (Our component is opaque, so we must completely fill the background with a solid colour)
 	g.fillAll(getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 
-	// You can add your drawing code here!
 }
 
 void MainComponent::resized()
 {
-
+	// Initialize the flexbox
 	juce::FlexBox mainFlexBox;
+	juce::FlexBox decks;
+
 	mainFlexBox.flexDirection = juce::FlexBox::Direction::column;
 	mainFlexBox.items.add(juce::FlexItem(header).withFlex(0.5));
 
-	juce::FlexBox decks;
 	decks.flexDirection = juce::FlexBox::Direction::row;
-
 	decks.items.add(juce::FlexItem(deckGUI1).withFlex(1));
 	decks.items.add(juce::FlexItem(deckGUI2).withFlex(1));
 
 	mainFlexBox.items.add(juce::FlexItem(decks).withFlex(4));
 	mainFlexBox.items.add(juce::FlexItem(playlistComponent).withFlex(2));
 
-
 	mainFlexBox.performLayout(getLocalBounds().toFloat());
-	// header.setBounds(0, 0, getWidth(), headerHeight);
-	// deckGUI1.setBounds(0, headerHeight, getWidth()/2, getHeight()- headerHeight);
-	// deckGUI2.setBounds(getWidth()/2, headerHeight, getWidth()/2, getHeight()- headerHeight);
-
 }
 

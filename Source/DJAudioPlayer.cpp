@@ -23,50 +23,50 @@ DJAudioPlayer::~DJAudioPlayer()
 
 void DJAudioPlayer::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
 {
+
 	trackSampleRate = sampleRate;
+
+	// Preparing the audio source for playback
 	transportSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
-
 	resampleSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
-
 	bassSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
 	trebleSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
 
+	// Setting the filter coefficients
 	bassSource.setCoefficients(juce::IIRCoefficients::makeLowShelf(sampleRate, bassCutOffFreq, 1, 1));
 	trebleSource.setCoefficients(juce::IIRCoefficients::makeHighShelf(sampleRate, trebleCutOffFreq, 1, 1));
 	filteredResampleSource.setCoefficients(juce::IIRCoefficients::makeAllPass(sampleRate, 200));
-	
 }
+
+
 void DJAudioPlayer::getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill)
 {
 	filteredResampleSource.getNextAudioBlock(bufferToFill);
 
+	// If the isLooping is true then set the readerSource to loop
 	if(isLooping == true && readerSource->isLooping() == false)
 	{
 		readerSource->setLooping(true);
-
 	}
 
 	if (reader != nullptr)
 	{
 		AudioBuffer<float> buffer(2, bufferToFill.numSamples); // create new buffer for channel data
 
+		// Copy the data from the bufferToFill to the buffer for Left and Right channels
 		buffer.copyFrom(0, 0, bufferToFill.buffer->getReadPointer(0), bufferToFill.numSamples);
 		buffer.copyFrom(1, 0, bufferToFill.buffer->getReadPointer(1), bufferToFill.numSamples);
 
 		// Calculate RMS values for left and right channels
-		//float leftRMS = buffer.getRMSLevel(0, 0, bufferToFill.numSamples);
 		float leftRMS = buffer.getRMSLevel(0, 0, bufferToFill.numSamples);
 		//float leftRMS = buffer.getRMSLevel(0, 0, bufferToFill.numSamples);
 		float rightRMS = buffer.getRMSLevel(1, 0, bufferToFill.numSamples);
 
-		// Decible Adjestment
+		// Decibel Adjustment
 		float referenceValue = 0.35f;
 
 		leftDB = Decibels::gainToDecibels(leftRMS* referenceValue);
 		rightDB = Decibels::gainToDecibels(rightRMS * referenceValue);
-
-		//leftDB = 20.0f * std::log10(leftRMS / referenceValue);
-		//rightDB = 20.0f * std::log10(rightRMS / referenceValue);
 
 	}
 
@@ -79,20 +79,18 @@ void DJAudioPlayer::releaseResources()
 	bassSource.releaseResources();
 	trebleSource.releaseResources();
 	filteredResampleSource.releaseResources();
-	
 }
 
 void DJAudioPlayer::loadURL(URL audioURL)
 {
+	
 	reader = formatManager.createReaderFor(audioURL.createInputStream(false));
 	if (reader != nullptr) // good file!
 	{
-		std::unique_ptr<AudioFormatReaderSource> newSource(new AudioFormatReaderSource(reader,
-			true));
+		std::unique_ptr<AudioFormatReaderSource> newSource(new AudioFormatReaderSource(reader,true));
 		transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
 		transportSource.addChangeListener(this);
 		readerSource.reset(newSource.release());
-
 		trackTitle = audioURL.getFileName();
 		trackSeconds = transportSource.getLengthInSeconds();
 	}
@@ -100,14 +98,14 @@ void DJAudioPlayer::loadURL(URL audioURL)
 
 void DJAudioPlayer::changeListenerCallback(juce::ChangeBroadcaster* source)
 {
+	// If the transportSource has stopped playing then stop the player
 	if (source == &transportSource && !transportSource.isPlaying())
 	{
 		stop();
 	}
 }
 
-
-
+// Volume Control
 void DJAudioPlayer::setGain(double gain)
 {
 	if (gain < 0 || gain > 1.0)
@@ -153,6 +151,7 @@ void DJAudioPlayer::setSpeed(double ratio)
 		resampleSource.setResamplingRatio(ratio);
 	}
 }
+
 void DJAudioPlayer::setPosition(double posInSecs)
 {
 	transportSource.setPosition(posInSecs);
@@ -174,6 +173,7 @@ void DJAudioPlayer::start()
 {
 	transportSource.start();
 }
+
 void DJAudioPlayer::stop()
 {
 	transportSource.stop();
@@ -191,6 +191,7 @@ void DJAudioPlayer::backward()
 	transportSource.setPosition(currentPos - 5); // 5 seconds back from current position
 	}
 }
+
 void DJAudioPlayer::forward()
 {
 	auto currentPos = transportSource.getCurrentPosition();
@@ -204,10 +205,12 @@ void DJAudioPlayer::forward()
 		transportSource.setPosition(currentPos + 5); // 5 seconds forward from current position
 	}
 }
+
 void DJAudioPlayer::pause()
 {
 	transportSource.stop();
 }
+
 void DJAudioPlayer::loop()
 {
 	if (readerSource->isLooping())
@@ -223,8 +226,6 @@ void DJAudioPlayer::loop()
 }
 
 
-
-
 double DJAudioPlayer::getPositionRelative()
 {
 	return transportSource.getCurrentPosition() / transportSource.getLengthInSeconds();
@@ -234,12 +235,16 @@ Array <String> DJAudioPlayer::getTrackDetails()
 {
 	auto currentTime = utils.convertSecTohhmmssFormat(transportSource.getCurrentPosition());
 
+	// trackSeconds is invalid number when track is not loaded
 	if (trackSeconds <= 0)
 	{
 		trackSeconds = 0;
 	}
+
+	// convert trackSeconds to hh:mm:ss format
 	auto totalTime = utils.convertSecTohhmmssFormat(trackSeconds);
 	auto time = currentTime + "/" + totalTime;
+
 	return { trackTitle, time };
 }
 
@@ -252,7 +257,6 @@ bool DJAudioPlayer::isPlaying()
 {
 		return transportSource.isPlaying();
 }
-
 
 void DJAudioPlayer::setPlayerColour(Colour colour)
 {

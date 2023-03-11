@@ -27,6 +27,7 @@ String Utilities::convertSecTohhmmssFormat(int seconds)
 	int hr = (seconds / 3600);
 	int min = (seconds / 60) % 60;
 	int sec = (seconds % 60);
+
 	if (hr < 10) {
 		hr0 = "0";
 	}
@@ -37,6 +38,7 @@ String Utilities::convertSecTohhmmssFormat(int seconds)
 		sec0 = "0";
 	}
 
+	// If the hour is 00, don't display it
 	String hourString;
 	if (hr0 + String(hr) == "00")
 	{

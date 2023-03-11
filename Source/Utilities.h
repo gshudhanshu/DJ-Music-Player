@@ -21,6 +21,7 @@ public:
     Utilities();
     ~Utilities() override;
 
+    // Convert seconds to hh:mm:ss format string
     String convertSecTohhmmssFormat(int seconds);
     
 private:

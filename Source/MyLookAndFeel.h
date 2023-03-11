@@ -5,10 +5,10 @@
 	Created: 9 Mar 2023 1:59:52am
 	Author:  Shudhanshu Gunjal
 
-	Taking reference from following github repository, using knobs from g200kg.com gallary, and using Knobman software to edit the knobs:
+	Taking reference from following github repository, using knobs from g200kg.com gallary, and Knobman software to edit the knobs:
 	- https://github.com/remberg/juceCustomSliderSample
 	- https://www.g200kg.com/en/webknobman/gallery.php
-	- Knobman software is used to create/modify the images for the rotary slider
+	- Knobman software is used to create/modify the images for the sliders
 
   ==============================================================================
 */
@@ -188,8 +188,6 @@ public:
 //
 //    void drawTableListBoxBackground(juce::Graphics& g, juce::TableListBox& tableListBox) override;
 //};
-//
-//
 
 
 class MyResizableWindowLookAndFeel : public LookAndFeel_V4
@@ -211,6 +209,4 @@ public:
 
 		setColour(TableHeaderComponent::textColourId, Colour(0xffffffff));
 	}
-
-
 };
