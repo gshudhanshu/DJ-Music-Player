@@ -16,157 +16,56 @@
 #pragma once
 #include <JuceHeader.h>
 
+// Custom LookAndFeel for a rotary slider control
 class MyRotarySliderLookAndFeel : public juce::LookAndFeel_V4
 {
 public:
-	MyRotarySliderLookAndFeel(String* _side) : side(_side)
-	{
-		if (*side == String("A"))
-		{
-			knob = ImageCache::getFromMemory(BinaryData::orange_knob_png, BinaryData::orange_knob_pngSize);
-		}
-		else
-		{
-			knob = ImageCache::getFromMemory(BinaryData::cyan_knob_png, BinaryData::cyan_knob_pngSize);
-		}
-	}
-	void drawRotarySlider(juce::Graphics& g, int x, int y, int width, int height, float sliderPos,
-		const float rotaryStartAngle, const float rotaryEndAngle, juce::Slider& slider) override
-	{
-		if (knob.isValid())
-		{
-			const double rotation = (slider.getValue() - slider.getMinimum()) / (slider.getMaximum() - slider.getMinimum());
-			const int frames = knob.getHeight() / knob.getWidth();
-			const int frameId = (int)ceil(rotation * ((double)frames - 1.0));
-			const float padding = 5.0f;
-			const float radius = jmin(width / 2.0f - padding, height / 2.0f - padding);
-			const float centerX = x + width * 0.5f;
-			const float centerY = y + height * 0.5f;
-			const float rx = centerX - radius - 1.0f;
-			const float ry = centerY - radius;
+    // Constructor that takes a pointer to a string indicating the side (A or B) of the slider
+    MyRotarySliderLookAndFeel(String* _side);
 
-			g.drawImage(knob, (int)rx, (int)ry, 2 * (int)radius, 2 * (int)radius,
-				0, frameId * knob.getWidth(), knob.getWidth(), knob.getWidth());
-		}
-		else
-		{
-			static const float textPpercent = 0.35f;
-			Rectangle<float> text_bounds(1.0f + width * (1.0f - textPpercent) / 2.0f, 0.5f * height, width * textPpercent, 0.5f * height);
+    // customize the appearance of the rotary slider
+    void drawRotarySlider(juce::Graphics& g, int x, int y, int width, int height, float sliderPos,
+        const float rotaryStartAngle, const float rotaryEndAngle, juce::Slider& slider) override;
 
-			g.setColour(Colours::white);
-
-			g.drawFittedText(String("No Image"), text_bounds.getSmallestIntegerContainer(),
-				Justification::horizontallyCentred | Justification::centred, 1);
-		}
-	}
-
-	void getSliderLayout(juce::Slider& slider, juce::Slider::SliderLayout& layout)
-	{
-		// call the base class to get the default layout
-		LookAndFeel_V4::getSliderLayout(slider);
-
-		// add padding to the layout
-		layout.sliderBounds = layout.sliderBounds.reduced(50);
-	}
+    // customize the layout of the slider
+    void getSliderLayout(juce::Slider& slider, juce::Slider::SliderLayout& layout);
 
 private:
-	String* side;
-	Image knob;
+    // Pointer to a string indicating the side (A or B) of the slider
+    String* side;
+
+    // Image of the knob used for the slider
+    juce::Image knob;
 };
 
+
+// Custom LookAndFeel for a linear slider control
 class MySliderLookAndFeel : public juce::LookAndFeel_V4
 {
 public:
-	MySliderLookAndFeel(String* _side) : side(_side)
-	{
-		if (*side == String("A"))
-		{
-			sliderThumbImage = ImageCache::getFromMemory(BinaryData::orange_slider_png, BinaryData::orange_slider_pngSize);
-		}
-		else
-		{
-			sliderThumbImage = ImageCache::getFromMemory(BinaryData::cyan_slider_png, BinaryData::cyan_slider_pngSize);
-		}
+    // Constructor that takes a pointer to a string indicating the side (A or B) of the slider
+    MySliderLookAndFeel(String* _side);
 
-	}
-
-	void drawLinearSlider(Graphics& g, int x, int y, int width, int height,
-		float sliderPos, float minSliderPos, float maxSliderPos,
-		const Slider::SliderStyle style, Slider& slider) override
-	{
-		const int lineThickness = 4;
-		const int dialWidth = sliderThumbImage.getWidth();
-		const int dialHeight = sliderThumbImage.getHeight();
-
-		//g.drawImageAt(sliderThumbImage, (width - dialWidth) / 2.f, sliderPos - (dialHeight / 2));
-
-		const float padding = 10.0f;
-		const float destWidth = width;
-		const float destHeight = height*0.5;
-		const float centerX = x + destWidth * 0.5f;
-		const float centerY = y + destHeight * 0.5f - 8.0f;
-		const float rx = centerX - destWidth/2 - 1.0f;
-		const float ry = centerY;
-
-		if (*side == String("A"))
-		{
-			g.setColour(Colour(252,183,67));
-		} else
-		{
-			g.setColour(Colour(74, 244, 210));
-		}
-		g.fillRect(((int)destWidth - lineThickness) / 2, (int)destHeight / 2 - 8.0, lineThickness, height);
-
-		g.setColour(Colours::black);
-		g.fillRect(((int)destWidth - lineThickness) / 2, (int)destHeight / 2 - 8.0, lineThickness, (int)sliderPos);
-
-		g.drawImage(sliderThumbImage, (int)rx, sliderPos-(int)ry,  (int)destWidth,  (int)destHeight,
-			0, 0, dialWidth, dialHeight);
-
-	}
+    // Customize the appearance of the linear slider
+    void drawLinearSlider(Graphics& g, int x, int y, int width, int height, float sliderPos,
+        float minSliderPos, float maxSliderPos, const Slider::SliderStyle style, Slider& slider) override;
 
 private:
-	String* side;
-	Image sliderThumbImage, sliderBackgroundImage;
+    // Pointer to a string indicating the side (A or B) of the slider
+    String* side;
 
+    // Image of the slider thumb and background
+    Image sliderThumbImage, sliderBackgroundImage;
 };
 
 
-
-class MyLookAndFeel : public LookAndFeel_V4
+// Custom LookAndFeel for buttons
+class MyLookAndFeel : public juce::LookAndFeel_V4
 {
 public:
-	MyLookAndFeel()
-	{
-		setColour(ResizableWindow::backgroundColourId, Colour(0xff1e253a)); 
-		setColour(TableHeaderComponent::backgroundColourId, Colour(0xff1e253a));
+    MyLookAndFeel();
 
-		setColour(juce::ListBox::backgroundColourId, Colours::grey);
-		setColour(juce::ListBox::textColourId, Colours::white);
-		setColour(juce::ListBox::outlineColourId, Colours::orange);
-
-		setColour(TextEditor::backgroundColourId, Colour(0xff1e253a));
-
-		setColour(TextButton::buttonColourId, Colour(0xff1e253a));
-		setColour(TextButton::textColourOffId, Colour(0xffffffff));
-
-		setColour(TableHeaderComponent::textColourId, Colour(0xffffffff));
-	}
-
-	void drawButtonBackground(Graphics& g, Button& button, const Colour& backgroundColour,
-		bool isMouseOverButton, bool isButtonDown) override
-	{
-		LookAndFeel_V4::drawButtonBackground(g, button, backgroundColour, isMouseOverButton, isButtonDown);
-
-		g.setColour(backgroundColour);
-		g.fillRect(button.getLocalBounds());
-		g.setColour(Colours::grey);
-		g.drawRect(button.getLocalBounds(),1);
-
-		if (isButtonDown)
-		{
-			g.setColour(Colours::grey); // Set background color when button is pressed
-			g.fillRect(button.getLocalBounds());
-		}
-	}
+    // Customize the appearance of buttons
+    void drawButtonBackground(juce::Graphics& g, juce::Button& button, const juce::Colour& backgroundColour,
+        bool isMouseOverButton, bool isButtonDown) override;
 };
