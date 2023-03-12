@@ -30,7 +30,6 @@ DeckGUI::DeckGUI(DJAudioPlayer* _player, String* _side,
 	auto loopSvg = Drawable::createFromImageData(BinaryData::repeat_solid_svg, BinaryData::repeat_solid_svgSize);
 
 	// Setting up the buttons text and images
-	sideButton.setButtonText(*side);
 	playButton.setImages(playSvg.get());
 	stopButton.setImages(stopSvg.get());
 	pauseButton.setImages(pauseSvg.get());
@@ -38,6 +37,8 @@ DeckGUI::DeckGUI(DJAudioPlayer* _player, String* _side,
 	forwardButton.setImages(forwardSvg.get());
 	loopButton.setClickingTogglesState(true);
 	loopButton.setImages(loopSvg.get());
+
+	sideButton.setButtonText(*side);
 
 	// Low pass filter slider
 	lowPassSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
@@ -145,6 +146,7 @@ DeckGUI::~DeckGUI()
 
 void DeckGUI::paint(Graphics& g)
 {
+
 	// g.fillAll(getLookAndFeel().findColour(ResizableWindow::backgroundColourId));   // clear the background
 
 	//g.setColour(Colours::grey);

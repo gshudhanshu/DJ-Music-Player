@@ -131,69 +131,12 @@ private:
 
 };
 
-class MyTextButtonLookAndFeel : public juce::LookAndFeel_V4
+
+
+class MyLookAndFeel : public LookAndFeel_V4
 {
 public:
-	MyTextButtonLookAndFeel()
-	{
-		// Set default colors for text button
-		setColour(TextButton::buttonColourId, Colour(0xff282a36)); // Blue-black background
-		setColour(TextButton::textColourOnId, Colours::orange); // Orange text
-		//setColour(TextButton::outlineColourId, Colours::orange); // Orange border
-	}
-
-	void drawButtonBackground(Graphics & g, Button & button, const Colour & backgroundColour,
-		bool isMouseOverButton, bool isButtonDown) override
-	{
-		LookAndFeel_V4::drawButtonBackground(g, button, backgroundColour, isMouseOverButton, isButtonDown);
-
-		if (isButtonDown)
-		{
-			g.setColour(Colours::orange); // Set background color when button is pressed
-			g.fillRect(button.getLocalBounds());
-		}
-	}
-	
-};
-
-
-//class MyDrawableButtonLookAndFeel : public juce::LookAndFeel_V4
-//{
-//public:
-//    MyDrawableButtonLookAndFeel();
-//    void drawButtonBackground(juce::Graphics& g, juce::Button& button, const juce::Colour& backgroundColour,
-//        bool isMouseOverButton, bool isButtonDown) override;
-//
-//    void drawButtonText(juce::Graphics& g, juce::TextButton& button, bool isMouseOverButton, bool isButtonDown) override;
-//
-//    void drawToggleButton(juce::Graphics& g, juce::ToggleButton& toggleButton, bool isMouseOverButton, bool isButtonDown) override;
-//};
-//
-//class MyTableLookAndFeel : public juce::LookAndFeel_V4
-//{
-//public:
-//    MyTableLookAndFeel();
-//    void drawTableHeader(juce::Graphics& g, const juce::TableHeaderComponent& header) override;
-//
-//    void drawTableRowBackground(juce::Graphics& g, int rowNumber, int width, int height, bool rowIsSelected) override;
-//
-//    void drawTableHeaderBackground(juce::Graphics& g, juce::TableHeaderComponent& header) override;
-//
-//    void drawTableHeaderColumn(juce::Graphics& g, const juce::String& columnName,
-//        int columnId, int width, int height, bool isMouseOver, bool isMouseDown,
-//        int columnFlags) override;
-//
-//    void drawTableListBoxRow(juce::Graphics& g, int rowNumber, int width, int height, bool rowIsSelected,
-//        juce::TableListBox& table) override;
-//
-//    void drawTableListBoxBackground(juce::Graphics& g, juce::TableListBox& tableListBox) override;
-//};
-
-
-class MyResizableWindowLookAndFeel : public LookAndFeel_V4
-{
-public:
-	MyResizableWindowLookAndFeel()
+	MyLookAndFeel()
 	{
 		setColour(ResizableWindow::backgroundColourId, Colour(0xff1e253a)); 
 		setColour(TableHeaderComponent::backgroundColourId, Colour(0xff1e253a));
@@ -208,5 +151,22 @@ public:
 		setColour(TextButton::textColourOffId, Colour(0xffffffff));
 
 		setColour(TableHeaderComponent::textColourId, Colour(0xffffffff));
+	}
+
+	void drawButtonBackground(Graphics& g, Button& button, const Colour& backgroundColour,
+		bool isMouseOverButton, bool isButtonDown) override
+	{
+		LookAndFeel_V4::drawButtonBackground(g, button, backgroundColour, isMouseOverButton, isButtonDown);
+
+		g.setColour(backgroundColour);
+		g.fillRect(button.getLocalBounds());
+		g.setColour(Colours::grey);
+		g.drawRect(button.getLocalBounds(),1);
+
+		if (isButtonDown)
+		{
+			g.setColour(Colours::grey); // Set background color when button is pressed
+			g.fillRect(button.getLocalBounds());
+		}
 	}
 };

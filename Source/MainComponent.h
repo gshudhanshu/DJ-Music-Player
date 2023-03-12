@@ -43,8 +43,7 @@ private:
     // Your private member variables go here...
 
     // Look and Feel
-    MyTextButtonLookAndFeel myTextButtonLookAndFeel;
-    MyResizableWindowLookAndFeel myResizableWindowLookAndFeel;
+    MyLookAndFeel myLookAndFeel;
 
     AudioFormatManager formatManager;
     AudioThumbnailCache thumbCache{100};

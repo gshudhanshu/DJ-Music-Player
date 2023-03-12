@@ -18,8 +18,7 @@ MainComponent::MainComponent()
 	// Setting the size of the window
 	setSize(1000, 600);
 
-	//LookAndFeel::setDefaultLookAndFeel(&myTextButtonLookAndFeel);
-	LookAndFeel::setDefaultLookAndFeel(&myResizableWindowLookAndFeel);
+	LookAndFeel::setDefaultLookAndFeel(&myLookAndFeel);
 
 	// Some platforms require permissions to open input channels so request that here
 	if (RuntimePermissions::isRequired(RuntimePermissions::recordAudio)

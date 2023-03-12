@@ -67,7 +67,7 @@ private:
     DrawableButton forwardButton{ "FORWARD", DrawableButton::ButtonStyle::ImageOnButtonBackground };
     DrawableButton backwardButton{ "BACKWARD",DrawableButton::ButtonStyle::ImageOnButtonBackground };
     TextButton loadButton{ "Load External Track" };
-    TextButton sideButton;
+    TextButton sideButton{"Side Button"};
 
 
     Slider volSlider; 
