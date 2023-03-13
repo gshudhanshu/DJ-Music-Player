@@ -99,7 +99,7 @@ void DJAudioPlayer::loadURL(URL audioURL)
 void DJAudioPlayer::changeListenerCallback(juce::ChangeBroadcaster* source)
 {
 	// If the transportSource has stopped playing then stop the player
-	if (source == &transportSource && !transportSource.isPlaying())
+	if (source == &transportSource && !transportSource.isPlaying() && reader->input->isExhausted())
 	{
 		stop();
 	}

@@ -28,8 +28,8 @@
       <FILE id="Hbi16q" name="MyLookAndFeel.h" compile="0" resource="0" file="Source/MyLookAndFeel.h"/>
       <FILE id="Qh1Q5C" name="LevelMeter.cpp" compile="1" resource="0" file="Source/LevelMeter.cpp"/>
       <FILE id="dPkvJ4" name="LevelMeter.h" compile="0" resource="0" file="Source/LevelMeter.h"/>
-      <FILE id="FYz33H" name="DiscArt.cpp" compile="1" resource="0" file="Source/DiscArt.cpp"/>
-      <FILE id="f8aBmJ" name="DiscArt.h" compile="0" resource="0" file="Source/DiscArt.h"/>
+      <FILE id="FYz33H" name="DiskArt.cpp" compile="1" resource="0" file="Source/DiskArt.cpp"/>
+      <FILE id="f8aBmJ" name="DiskArt.h" compile="0" resource="0" file="Source/DiskArt.h"/>
       <FILE id="QcjyzR" name="PlaylistComponent.cpp" compile="1" resource="0"
             file="Source/PlaylistComponent.cpp"/>
       <FILE id="hY42Yf" name="PlaylistComponent.h" compile="0" resource="0"

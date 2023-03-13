@@ -18,7 +18,7 @@ DeckGUI::DeckGUI(DJAudioPlayer* _player, String* _side,
 	: player(_player), side(_side),
 	waveformDisplay(formatManagerToUse, cacheToUse, playerColour),
 	levelMeterL(_player), levelMeterR(_player),
-	discArt(_player)
+	diskArt(_player)
 
 {
 	// Import svg button SVGs
@@ -96,7 +96,7 @@ DeckGUI::DeckGUI(DJAudioPlayer* _player, String* _side,
 
 	// Making all the elements visible
 	addAndMakeVisible(sideButton);
-	addAndMakeVisible(discArt);
+	addAndMakeVisible(diskArt);
 	addAndMakeVisible(playButton);
 	addAndMakeVisible(stopButton);
 	addAndMakeVisible(pauseButton);
@@ -199,7 +199,7 @@ void DeckGUI::resized()
 	if (*side == String("A"))
 	{
 		diskArtAdjKnobsAndVol.items.add(FlexItem(sideButton).withFlex(0.5));
-		diskArtAdjKnobsAndVol.items.add(FlexItem(discArt).withFlex(4));
+		diskArtAdjKnobsAndVol.items.add(FlexItem(diskArt).withFlex(4));
 		diskArtAdjKnobsAndVol.items.add(FlexItem(adjKnobs).withFlex(1));
 		diskArtAdjKnobsAndVol.items.add(FlexItem(volumeMeterAndVolSlider).withFlex(1));
 		diskArtAdjKnobsAndVol.items.add(FlexItem().withFlex(0.1));
@@ -210,7 +210,7 @@ void DeckGUI::resized()
 		diskArtAdjKnobsAndVol.items.add(FlexItem().withFlex(0.1));
 		diskArtAdjKnobsAndVol.items.add(FlexItem(volumeMeterAndVolSlider).withFlex(1));
 		diskArtAdjKnobsAndVol.items.add(FlexItem(adjKnobs).withFlex(1));
-		diskArtAdjKnobsAndVol.items.add(FlexItem(discArt).withFlex(4));
+		diskArtAdjKnobsAndVol.items.add(FlexItem(diskArt).withFlex(4));
 		diskArtAdjKnobsAndVol.items.add(FlexItem(sideButton).withFlex(0.5));
 	}
 
@@ -237,26 +237,30 @@ void DeckGUI::buttonClicked(Button* button)
 	{
 		std::cout << "Play button was clicked " << std::endl;
 		player->start();
-		discArt.setRotationSpeed(1);
+		diskArt.setRotationSpeed(1);
 	}
 
 	if (button == &stopButton)
 	{
 		std::cout << "Stop button was clicked " << std::endl;
 		player->stop();
-		discArt.setRotationSpeed(0);
+		diskArt.setRotationSpeed(0);
 	}
 
 	if (button == &pauseButton)
 	{
 		std::cout << "Pause button was clicked " << std::endl;
 		player->pause();
-		discArt.setRotationSpeed(0);
-	}	if (button == &backwardButton)
+		diskArt.setRotationSpeed(0);
+	}
+
+	if (button == &backwardButton)
 	{
 		std::cout << "Backward button was clicked " << std::endl;
 		player->backward();
-	}	if (button == &forwardButton)
+	}
+
+	if (button == &forwardButton)
 	{
 		std::cout << "Forward button was clicked " << std::endl;
 		player->forward();
@@ -296,7 +300,7 @@ void DeckGUI::buttonClicked(Button* button)
 			player->loadURL(URL{ chooser.getResult() });
 			waveformDisplay.loadURL(URL{ chooser.getResult() });
 		});
-		discArt.setRotationSpeed(0);
+		diskArt.setRotationSpeed(0);
 	}
 }
 
@@ -320,7 +324,7 @@ void DeckGUI::sliderValueChanged(Slider* slider)
 	{
 		player->setSpeed(slider->getValue());
 		if (player->isPlaying()) {
-			discArt.setRotationSpeed(slider->getValue());
+			diskArt.setRotationSpeed(slider->getValue());
 		}
 	}
 }
@@ -361,7 +365,7 @@ void DeckGUI::loadTrackToDeck(File file)
 
 	// Start disk rotation
 	if (player->isPlaying()) {
-		discArt.setRotationSpeed(speedSlider.getValue());
+		diskArt.setRotationSpeed(speedSlider.getValue());
 	}
 }
 
@@ -372,7 +376,7 @@ void DeckGUI::timerCallback()
 	trackDurationTxt.setText(player->getTrackDetails()[1]);
 
 	if (!player->isPlaying()) {
-		discArt.setRotationSpeed(0);
+		diskArt.setRotationSpeed(0);
 	}
 
 	// Set decibels to the level meters

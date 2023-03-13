@@ -237,15 +237,15 @@ void PlaylistComponent::deleteTrackFromPlaylist(int id)
 			if (searchInput.isEmpty())
 			{
 				playlistArr.remove(id);
+				tableComponent.updateContent();
+
 			}
 			else
 			{
-				int index = playlistArrIndex[id];
-				playlistArr.remove(index);
+				DBG("id: " << id);
+				playlistArr.remove(id);
+				searchTrackInPlaylist(searchInput.getText());
 			}
-
-			tableComponent.updateContent();
-			searchTrackInPlaylist(searchInput.getText());
 		}
 	});
 
@@ -271,7 +271,7 @@ void PlaylistComponent::exportTracksFromPlaylist()
 	// Create a temp file to store the playlist
 	auto fileToSave = File::createTempFile("export_playlist.txt");
 
-	// Append the playlist to the temp file
+	// Write the playlist to the temp file
 	for (auto file : playlistArr) {
 		fileToSave.appendText(file.getFullPathName() + "\n");
 	}
@@ -280,26 +280,31 @@ void PlaylistComponent::exportTracksFromPlaylist()
 
 	// Export the temp file to the user's computer
 	exportPlaylist.launchAsync(flags, [this, fileToSave](const FileChooser& chooser)
-	{
-		auto result = chooser.getURLResult();
-		auto name = result.isEmpty() ? String()
-							  : (result.isLocalFile() ? result.getLocalFile().getFullPathName()
-							  : result.toString(true));
-		if (!result.isEmpty())
 		{
-			std::unique_ptr<InputStream>  wi(fileToSave.createInputStream());
-			std::unique_ptr<OutputStream> wo(result.createOutputStream());
+			auto result = chooser.getURLResult();
+	auto name = result.isEmpty() ? String()
+		: (result.isLocalFile() ? result.getLocalFile().getFullPathName()
+			: result.toString(true));
+	if (!result.isEmpty())
+	{
+		// Delete the existing file
+		File fileToDelete(name);
+		fileToDelete.deleteFile();
 
-			// Copy the temp file to the user's computer
-			if (wi.get() != nullptr && wo.get() != nullptr)
-			{
-				auto numWritten = wo->writeFromInputStream(*wi, -1);
-				jassertquiet(numWritten > 0);
-				wo->flush();
-			}
+		// Write the new content to the existing file
+		std::unique_ptr<InputStream>  wi(fileToSave.createInputStream());
+		std::unique_ptr<OutputStream> wo(fileToDelete.createOutputStream());
+
+		if (wi.get() != nullptr && wo.get() != nullptr)
+		{
+			auto numWritten = wo->writeFromInputStream(*wi, -1);
+			jassertquiet(numWritten > 0);
+			wo->flush();
 		}
-	});
+	}
+		});
 }
+
 
 void PlaylistComponent::autoExportDefaultPlaylist(String path)
 {

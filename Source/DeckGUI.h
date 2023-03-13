@@ -14,7 +14,7 @@
 #include "DJAudioPlayer.h"
 #include "WaveformDisplay.h"
 #include "LevelMeter.h"
-#include "DiscArt.h"
+#include "DiskArt.h"
 #include "MyLookAndFeel.h"
 
 //==============================================================================
@@ -88,7 +88,7 @@ private:
     DJAudioPlayer* player;
 
 	String* side;
-    DiscArt discArt;
+    DiskArt diskArt;
 
     MyRotarySliderLookAndFeel myRotarySliderLookAndFeel{side};
     MySliderLookAndFeel mySliderLookAndFeel{side};

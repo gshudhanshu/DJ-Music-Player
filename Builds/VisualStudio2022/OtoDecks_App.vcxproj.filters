@@ -628,7 +628,7 @@
     <ClCompile Include="..\..\Source\LevelMeter.cpp">
       <Filter>OtoDecks\Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\DiscArt.cpp">
+    <ClCompile Include="..\..\Source\DiskArt.cpp">
       <Filter>OtoDecks\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\PlaylistComponent.cpp">
@@ -3153,7 +3153,7 @@
     <ClInclude Include="..\..\Source\LevelMeter.h">
       <Filter>OtoDecks\Source</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\DiscArt.h">
+    <ClInclude Include="..\..\Source\DiskArt.h">
       <Filter>OtoDecks\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\PlaylistComponent.h">

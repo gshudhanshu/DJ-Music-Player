@@ -96,6 +96,8 @@ private:
     AudioFormatManager& formatManager;
 
     double trackSampleRate;
+
+    // Cut off frequencies for bass and treble
     int bassCutOffFreq = 300;
     int trebleCutOffFreq = 3000;
 
@@ -103,14 +105,19 @@ private:
     AudioTransportSource transportSource; 
     ResamplingAudioSource resampleSource{&transportSource, false, 2};
 
+    // IIR Filters
 	IIRFilterAudioSource bassSource{ &resampleSource, false };
     IIRFilterAudioSource trebleSource{ &bassSource, false };
     IIRFilterAudioSource filteredResampleSource{ &trebleSource, false };
 
+    // Theme colour
     Colour playerColor;
+
+    // Track details
 	String trackTitle;
     int trackSeconds;
 
+    // Decibel values
     float leftDB;
     float rightDB;
 };

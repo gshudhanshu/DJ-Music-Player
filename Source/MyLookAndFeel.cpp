@@ -34,16 +34,19 @@ void MyRotarySliderLookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y
         const float radius = jmin(width / 2.0f - padding, height / 2.0f - padding);
         const float centerX = x + width * 0.5f;
         const float centerY = y + height * 0.5f;
-        const float rx = centerX - radius - 1.0f;
+        
+    	const float rx = centerX - radius - 1.0f;
         const float ry = centerY - radius;
 
         g.drawImage(knob, (int)rx, (int)ry, 2 * (int)radius, 2 * (int)radius,
             0, frameId * knob.getWidth(), knob.getWidth(), knob.getWidth());
     }
+
+	// if the knob image is not valid, shows a text instead of the knob
     else
     {
-        static const float textPpercent = 0.35f;
-        Rectangle<float> text_bounds(1.0f + width * (1.0f - textPpercent) / 2.0f, 0.5f * height, width * textPpercent, 0.5f * height);
+        static const float textPercent = 0.35f;
+        Rectangle<float> text_bounds(1.0f + width * (1.0f - textPercent) / 2.0f, 0.5f * height, width * textPercent, 0.5f * height);
 
         g.setColour(Colours::white);
 
@@ -90,6 +93,7 @@ void MySliderLookAndFeel::drawLinearSlider(Graphics& g, int x, int y, int width,
     const float rx = centerX - destWidth / 2 - 1.0f;
     const float ry = centerY;
 
+    // If the slider is for deck A then set the colour to orange else set it to cyan
     if (*side == String("A"))
     {
         g.setColour(Colour(252, 183, 67));
@@ -98,11 +102,15 @@ void MySliderLookAndFeel::drawLinearSlider(Graphics& g, int x, int y, int width,
     {
         g.setColour(Colour(74, 244, 210));
     }
+
+    // Draw the slider with respective theme color
     g.fillRect(((int)destWidth - lineThickness) / 2, (int)destHeight / 2 - 8.0, lineThickness, height);
 
     g.setColour(Colours::black);
+    // draw black slider backround
     g.fillRect(((int)destWidth - lineThickness) / 2, (int)destHeight / 2 - 8.0, lineThickness, (int)sliderPos);
 
+    // draw the slider thumb
     g.drawImage(sliderThumbImage, (int)rx, sliderPos - (int)ry, (int)destWidth, (int)destHeight,
         0, 0, dialWidth, dialHeight);
 }

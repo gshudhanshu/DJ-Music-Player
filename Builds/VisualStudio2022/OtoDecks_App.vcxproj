@@ -144,7 +144,7 @@
     <ClCompile Include="..\..\Source\Utilities.cpp"/>
     <ClCompile Include="..\..\Source\MyLookAndFeel.cpp"/>
     <ClCompile Include="..\..\Source\LevelMeter.cpp"/>
-    <ClCompile Include="..\..\Source\DiscArt.cpp"/>
+    <ClCompile Include="..\..\Source\DiskArt.cpp"/>
     <ClCompile Include="..\..\Source\PlaylistComponent.cpp"/>
     <ClCompile Include="..\..\Source\WaveformDisplay.cpp"/>
     <ClCompile Include="..\..\Source\Header.cpp"/>
@@ -2483,7 +2483,7 @@
     <ClInclude Include="..\..\Source\Utilities.h"/>
     <ClInclude Include="..\..\Source\MyLookAndFeel.h"/>
     <ClInclude Include="..\..\Source\LevelMeter.h"/>
-    <ClInclude Include="..\..\Source\DiscArt.h"/>
+    <ClInclude Include="..\..\Source\DiskArt.h"/>
     <ClInclude Include="..\..\Source\PlaylistComponent.h"/>
     <ClInclude Include="..\..\Source\Header.h"/>
     <ClInclude Include="..\..\Source\WaveformDisplay.h"/>
