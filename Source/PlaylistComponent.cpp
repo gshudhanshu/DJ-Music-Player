@@ -237,15 +237,16 @@ void PlaylistComponent::deleteTrackFromPlaylist(int id)
 			if (searchInput.isEmpty())
 			{
 				playlistArr.remove(id);
-				tableComponent.updateContent();
-
 			}
 			else
 			{
 				DBG("id: " << id);
+				DBG("id: " << playlistArr[id].getFileName());
 				playlistArr.remove(id);
-				searchTrackInPlaylist(searchInput.getText());
 			}
+			tableComponent.updateContent();
+			searchTrackInPlaylist(searchInput.getText());
+
 		}
 	});
 
