@@ -4,4 +4,4 @@ EZEE Player is a basic DJ application that can play two music tracks simultaneou
 The player contains usual player buttons like play, stop, pause, backward, forward, and loop buttons.
 This player contains a playlist component where the user can load the track to Deck “A” or “B”, delete the track from the playlist, and on the left side, there are action section of the playlist where the user can search, import, export, clear the playlist.
 
-![alt text](https://github.com/gshudhanshu/DJ-Music-Player/screenshot.png "EZEE player screenshot")
+![alt text](https://github.com/gshudhanshu/DJ-Music-Player/blob/master/screenshot.png "EZEE player screenshot")
